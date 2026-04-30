@@ -9,29 +9,31 @@ if (!isset($_SESSION['cart'])) {
 
 // Handle cart updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['action'])) {
-        switch ($_POST['action']) {
-            case 'add':
-                $productId = $_POST['product_id'];
-                addToCart($productId);
-                break;
-            case 'remove':
-                $productId = $_POST['product_id'];
-                removeFromCart($productId);
-                break;
-            case 'update':
-                $productId = $_POST['product_id'];
-                $quantity = $_POST['quantity'];
-                updateCart($productId, $quantity);
-                break;
-        }
+    $action = $_POST['action'] ?? 'add';
+    $productId = isset($_POST['product_id']) ? (int) $_POST['product_id'] : 0;
+    $quantity = isset($_POST['quantity']) ? (int) $_POST['quantity'] : 1;
+
+    switch ($action) {
+        case 'add':
+            addToCart($productId, $quantity);
+            break;
+        case 'remove':
+            removeFromCart($productId);
+            break;
+        case 'update':
+            updateCart($productId, $quantity);
+            break;
+        default:
+            addToCart($productId, $quantity);
+            break;
     }
 }
 
-$cartItems = $_SESSION['cart'];
+$cartItems = getCartItems();
 $totalPrice = calculateTotalPrice($cartItems);
 
-function calculateTotalPrice($cartItems) {
+function calculateTotalPrice($cartItems)
+{
     $total = 0;
     foreach ($cartItems as $item) {
         $total += $item['price'] * $item['quantity'];
@@ -42,12 +44,14 @@ function calculateTotalPrice($cartItems) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../assets/css/styles.css" rel="stylesheet">
     <title>Shopping Cart</title>
 </head>
+
 <body class="bg-white text-black">
     <div class="container mx-auto p-4">
         <h1 class="text-2xl font-bold mb-4">Shopping Cart</h1>
@@ -94,4 +98,5 @@ function calculateTotalPrice($cartItems) {
         <?php endif; ?>
     </div>
 </body>
+
 </html>

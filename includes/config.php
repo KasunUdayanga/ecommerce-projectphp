@@ -1,14 +1,14 @@
 <?php
-$host = 'localhost'; // Database host
-$username = 'root'; // Database username
-$password = ''; // Database password
-$dbname = 'ecommerce'; // Database name
+$db_host = 'localhost'; // Database host
+$db_user = 'root'; // Database username
+$db_pass = ''; // Database password
+$db_name = 'ecommerce'; // Database name
 
-// Create connection
-$conn = new mysqli($host, $username, $password, $dbname);
+$db_config = [
+    'db_host' => $db_host,
+    'db_user' => $db_user,
+    'db_pass' => $db_pass,
+    'db_name' => $db_name,
+];
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-?>
+return $db_config;

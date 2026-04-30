@@ -1,7 +1,7 @@
 <?php
 session_start();
-require 'includes/config.php';
-require 'includes/functions.php';
+require_once 'includes/config.php';
+require_once 'includes/functions.php';
 
 // Fetch featured products
 $products = fetchFeaturedProducts();
@@ -10,12 +10,14 @@ $products = fetchFeaturedProducts();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eCommerce Project</title>
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
+
 <body class="bg-white text-black">
     <header class="bg-green-500 p-4">
         <h1 class="text-3xl font-bold text-white">Welcome to Our eCommerce Store</h1>
@@ -45,4 +47,5 @@ $products = fetchFeaturedProducts();
         <p>&copy; <?php echo date("Y"); ?> eCommerce Project. All rights reserved.</p>
     </footer>
 </body>
+
 </html>
