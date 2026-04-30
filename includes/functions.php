@@ -6,6 +6,34 @@ function ensureSessionStarted()
     }
 }
 
+if (!defined('PRODUCT_UPLOAD_DIR')) {
+    define('PRODUCT_UPLOAD_DIR', __DIR__ . '/../uploads/products');
+}
+
+if (!defined('MIME_JPEG')) {
+    define('MIME_JPEG', 'image/jpeg');
+}
+
+if (!defined('MIME_PNG')) {
+    define('MIME_PNG', 'image/png');
+}
+
+if (!defined('MIME_WEBP')) {
+    define('MIME_WEBP', 'image/webp');
+}
+
+if (!defined('PRODUCT_ALLOWED_MIME')) {
+    define('PRODUCT_ALLOWED_MIME', [MIME_JPEG, MIME_PNG, MIME_WEBP]);
+}
+
+if (!defined('PRODUCT_MIME_EXT')) {
+    define('PRODUCT_MIME_EXT', [
+        MIME_JPEG => 'jpg',
+        MIME_PNG => 'png',
+        MIME_WEBP => 'webp',
+    ]);
+}
+
 function getDbConnection()
 {
     global $db_config;
@@ -24,16 +52,27 @@ function getDbConnection()
     }
 
     ensureDatabaseSchema($conn);
+    ensureDefaultUser($conn);
     return $conn;
 }
 
 function ensureDatabaseSchema($conn)
 {
     $check = $conn->query("SHOW TABLES LIKE 'products'");
-    if ($check && $check->num_rows > 0) {
-        return;
+    $productsTableExists = $check && $check->num_rows > 0;
+
+    if (!$productsTableExists) {
+        runSchemaSetup($conn);
     }
 
+    $columnCheck = $conn->query("SHOW COLUMNS FROM products LIKE 'image'");
+    if ($columnCheck && $columnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE products ADD COLUMN image VARCHAR(255) DEFAULT NULL AFTER description");
+    }
+}
+
+function runSchemaSetup($conn)
+{
     $schemaPath = __DIR__ . '/../db/schema.sql';
     if (!file_exists($schemaPath)) {
         return;
@@ -55,6 +94,78 @@ function ensureDatabaseSchema($conn)
     }
 }
 
+function ensureDefaultUser($conn)
+{
+    $result = $conn->query("SELECT COUNT(*) AS total FROM users");
+    if (!$result) {
+        return;
+    }
+
+    $row = $result->fetch_assoc();
+    if ((int) ($row['total'] ?? 0) > 0) {
+        return;
+    }
+
+    $username = 'customer';
+    $email = 'customer@example.com';
+    $passwordHash = password_hash('customer123', PASSWORD_DEFAULT);
+
+    $stmt = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $username, $passwordHash, $email);
+    $stmt->execute();
+    $stmt->close();
+}
+
+function getUserByIdentifier($identifier)
+{
+    $conn = getDbConnection();
+    $sql = "SELECT * FROM users WHERE email = ? OR username = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $identifier, $identifier);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+    $conn->close();
+
+    return $user ?: null;
+}
+
+function attemptUserLogin($identifier, $password)
+{
+    ensureSessionStarted();
+    $user = getUserByIdentifier($identifier);
+    if (!$user) {
+        return false;
+    }
+
+    if (!password_verify($password, $user['password'])) {
+        return false;
+    }
+
+    $_SESSION['user_id'] = (int) $user['id'];
+    $_SESSION['user_name'] = $user['username'];
+    return true;
+}
+
+function isUserLoggedIn()
+{
+    ensureSessionStarted();
+    return !empty($_SESSION['user_id']);
+}
+
+function getLoggedInUserName()
+{
+    ensureSessionStarted();
+    return $_SESSION['user_name'] ?? '';
+}
+
+function logoutUser()
+{
+    ensureSessionStarted();
+    unset($_SESSION['user_id'], $_SESSION['user_name']);
+}
+
 function fetchProducts($limit = 10)
 {
     $conn = getDbConnection();
@@ -74,35 +185,6 @@ function fetchFeaturedProducts($limit = 6)
     return fetchProducts($limit);
 }
 
-function getSampleProducts()
-{
-    return [
-        [
-            'id' => null,
-            'sample_id' => 'sample-1',
-            'name' => 'Classic Canvas Sneakers',
-            'description' => 'Lightweight everyday sneakers with breathable canvas and a durable sole.',
-            'price' => 39.99,
-            'is_sample' => true,
-        ],
-        [
-            'id' => null,
-            'sample_id' => 'sample-2',
-            'name' => 'Eco Cotton Tee',
-            'description' => 'Soft organic cotton tee with a relaxed fit for all-day comfort.',
-            'price' => 19.5,
-            'is_sample' => true,
-        ],
-        [
-            'id' => null,
-            'sample_id' => 'sample-3',
-            'name' => 'Minimalist Backpack',
-            'description' => 'Roomy backpack with padded straps and a sleek, water-resistant finish.',
-            'price' => 54.0,
-            'is_sample' => true,
-        ],
-    ];
-}
 
 function getProductById($productId)
 {
@@ -121,6 +203,233 @@ function getProductById($productId)
     $conn->close();
 
     return $product ?: null;
+}
+
+function getAllProducts()
+{
+    $conn = getDbConnection();
+    $sql = "SELECT * FROM products ORDER BY created_at DESC";
+    $result = $conn->query($sql);
+    $products = [];
+    if ($result) {
+        $products = $result->fetch_all(MYSQLI_ASSOC);
+    }
+    $conn->close();
+    return $products;
+}
+
+function processProductImageUpload($file, $existingPath = null)
+{
+    $resultPath = $existingPath;
+    $mime = getUploadedImageMime($file);
+    if (!$mime) {
+        return $resultPath;
+    }
+
+    if (!isGdAvailableForMime($mime)) {
+        return storeOriginalProductImage($file, $existingPath, $mime);
+    }
+
+    $sourceImage = createImageFromMime($file['tmp_name'], $mime);
+    if ($sourceImage) {
+        $srcWidth = imagesx($sourceImage);
+        $srcHeight = imagesy($sourceImage);
+        $targetRatio = 4 / 3;
+        $srcRatio = $srcWidth / $srcHeight;
+
+        if ($srcRatio > $targetRatio) {
+            $newWidth = (int) floor($srcHeight * $targetRatio);
+            $newHeight = $srcHeight;
+            $srcX = (int) floor(($srcWidth - $newWidth) / 2);
+            $srcY = 0;
+        } else {
+            $newWidth = $srcWidth;
+            $newHeight = (int) floor($srcWidth / $targetRatio);
+            $srcX = 0;
+            $srcY = (int) floor(($srcHeight - $newHeight) / 2);
+        }
+
+        $targetWidth = 800;
+        $targetHeight = 600;
+        $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
+        imagecopyresampled(
+            $targetImage,
+            $sourceImage,
+            0,
+            0,
+            $srcX,
+            $srcY,
+            $targetWidth,
+            $targetHeight,
+            $newWidth,
+            $newHeight
+        );
+
+        if (!is_dir(PRODUCT_UPLOAD_DIR)) {
+            mkdir(PRODUCT_UPLOAD_DIR, 0777, true);
+        }
+
+        $fileName = 'product_' . uniqid('', true) . '.jpg';
+        $filePath = PRODUCT_UPLOAD_DIR . '/' . $fileName;
+        imagejpeg($targetImage, $filePath, 85);
+        imagedestroy($sourceImage);
+        imagedestroy($targetImage);
+
+        if ($existingPath) {
+            deleteProductImage($existingPath);
+        }
+
+        $resultPath = 'uploads/products/' . $fileName;
+    }
+
+    return $resultPath;
+}
+
+function getUploadedImageMime($file)
+{
+    $mime = null;
+    if (!isset($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+        return $mime;
+    }
+
+    $imageInfo = getimagesize($file['tmp_name']);
+    if ($imageInfo !== false) {
+        $candidate = $imageInfo['mime'] ?? '';
+        if (in_array($candidate, PRODUCT_ALLOWED_MIME, true)) {
+            $mime = $candidate;
+        }
+    }
+
+    return $mime;
+}
+
+function isGdAvailableForMime($mime)
+{
+    $available = function_exists('imagecreatetruecolor')
+        && function_exists('imagecopyresampled')
+        && function_exists('imagejpeg');
+
+    if ($available && $mime === MIME_PNG) {
+        $available = function_exists('imagecreatefrompng');
+    }
+
+    if ($available && $mime === MIME_WEBP) {
+        $available = function_exists('imagecreatefromwebp');
+    }
+
+    if ($available && $mime === MIME_JPEG) {
+        $available = function_exists('imagecreatefromjpeg');
+    }
+
+    return $available;
+}
+
+function createImageFromMime($filePath, $mime)
+{
+    if ($mime === MIME_PNG) {
+        return imagecreatefrompng($filePath);
+    }
+
+    if ($mime === MIME_WEBP) {
+        return imagecreatefromwebp($filePath);
+    }
+
+    return imagecreatefromjpeg($filePath);
+}
+
+function storeOriginalProductImage($file, $existingPath, $mime)
+{
+    $extension = PRODUCT_MIME_EXT[$mime] ?? 'jpg';
+
+    if (!is_dir(PRODUCT_UPLOAD_DIR)) {
+        mkdir(PRODUCT_UPLOAD_DIR, 0777, true);
+    }
+
+    $fileName = 'product_' . uniqid('', true) . '.' . $extension;
+    $filePath = PRODUCT_UPLOAD_DIR . '/' . $fileName;
+
+    if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+        return $existingPath;
+    }
+
+    if ($existingPath) {
+        deleteProductImage($existingPath);
+    }
+
+    return 'uploads/products/' . $fileName;
+}
+
+function getProductImageUrl($path, $prefix = '')
+{
+    if (!$path) {
+        return '';
+    }
+
+    if (preg_match('/^https?:\/\//', $path)) {
+        return $path;
+    }
+
+    return $prefix . ltrim($path, '/');
+}
+
+function deleteProductImage($path)
+{
+    if (!$path) {
+        return;
+    }
+
+    $fullPath = realpath(__DIR__ . '/../' . $path);
+    $uploadsRoot = realpath(PRODUCT_UPLOAD_DIR);
+    if ($fullPath && $uploadsRoot && strpos($fullPath, $uploadsRoot) === 0 && file_exists($fullPath)) {
+        unlink($fullPath);
+    }
+}
+
+function createProduct($name, $description, $price, $stock, $imagePath = null)
+{
+    $conn = getDbConnection();
+    $sql = "INSERT INTO products (name, description, image, price, stock) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $price = (float) $price;
+    $stock = (int) $stock;
+    $stmt->bind_param("sssdi", $name, $description, $imagePath, $price, $stock);
+    $success = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+    return $success;
+}
+
+function updateProduct($id, $name, $description, $price, $stock, $imagePath = null)
+{
+    $conn = getDbConnection();
+    $sql = "UPDATE products SET name = ?, description = ?, image = ?, price = ?, stock = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $price = (float) $price;
+    $stock = (int) $stock;
+    $id = (int) $id;
+    $stmt->bind_param("sssdii", $name, $description, $imagePath, $price, $stock, $id);
+    $success = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+    return $success;
+}
+
+function deleteProduct($id)
+{
+    $product = getProductById($id);
+    if ($product && !empty($product['image'])) {
+        deleteProductImage($product['image']);
+    }
+
+    $conn = getDbConnection();
+    $sql = "DELETE FROM products WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $id = (int) $id;
+    $stmt->bind_param("i", $id);
+    $success = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+    return $success;
 }
 
 function addToCart($productId, $quantity = 1)
@@ -211,4 +520,61 @@ function clearCart()
 {
     ensureSessionStarted();
     unset($_SESSION['cart']);
+} {
+    // register user, return user id on success or false on failure
+    function registerUser(string $name, string $email, string $password)
+    {
+        $conn = getDbConnection();
+
+        // ensure users table exists
+        $createSql = "CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(150) NOT NULL,
+            email VARCHAR(255) NOT NULL UNIQUE,
+            password_hash VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        $conn->query($createSql);
+
+        // check email exists
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $stmt->close();
+            return false;
+        }
+        $stmt->close();
+
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $name, $email, $hash);
+        $ok = $stmt->execute();
+        if (!$ok) {
+            $stmt->close();
+            return false;
+        }
+        $id = $stmt->insert_id;
+        $stmt->close();
+        return $id;
+    }
+
+    function getUserByEmail(string $email)
+    {
+        $conn = getDbConnection();
+        $stmt = $conn->prepare("SELECT id, name, email, password_hash FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $user = $res->fetch_assoc() ?: null;
+        $stmt->close();
+        return $user;
+    }
+
+    // format currency as LKR
+    function formatCurrency($amount)
+    {
+        return 'LKR ' . number_format((float)$amount, 2);
+    }
 }

@@ -9,6 +9,9 @@ $db_config = [
     'db_user' => $db_user,
     'db_pass' => $db_pass,
     'db_name' => $db_name,
+    'admin_username' => 'admin',
+    'admin_password' => 'admin123',
+    'admin_password_hash' => null,
 ];
 
 return $db_config;

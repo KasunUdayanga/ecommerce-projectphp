@@ -1,0 +1,1 @@
+[['cart'], {'data: " . json_encode([\'cartCount\' => $cartCount]) . "': ''}, {'data: " . json_encode([\'cartCount\' => 0]) . "': ''}, {'data: " . json_encode($data) . "': 'flush();'}, ['cart'], ['cart'], {'timestamp': 'time()]);\n        $lastCartCount = $currentCartCount;'}, ['heartbeat'], ['heartbeat'], {': heartbeat': 'flush();'}, {}]

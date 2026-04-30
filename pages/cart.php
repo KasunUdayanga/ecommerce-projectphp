@@ -2,6 +2,18 @@
 session_start();
 include '../includes/functions.php';
 
+$isLoggedIn = isUserLoggedIn();
+$userName = getLoggedInUserName();
+$loginRedirect = 'login.php?redirect=' . urlencode($_SERVER['REQUEST_URI'] ?? '/pages/cart.php');
+$brandName = 'Green Store';
+$tagline = 'Fresh finds delivered to your door.';
+$homeUrl = 'index.php';
+$cartUrl = 'cart.php';
+$adminUrl = '../admin/login.php';
+$loginUrl = $loginRedirect;
+$logoutUrl = 'logout.php';
+$showHero = false;
+
 // Initialize cart
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
@@ -15,9 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     switch ($action) {
         case 'add':
+            if (!$isLoggedIn) {
+                header('Location: ' . $loginRedirect);
+                exit;
+            }
             addToCart((int) $productId, $quantity);
             break;
         case 'add_sample':
+            if (!$isLoggedIn) {
+                header('Location: ' . $loginRedirect);
+                exit;
+            }
             $sampleId = $_POST['sample_id'] ?? $productId;
             $name = $_POST['name'] ?? '';
             $price = $_POST['price'] ?? 0;
@@ -60,8 +80,14 @@ function calculateTotalPrice($cartItems)
 </head>
 
 <body class="bg-white text-black">
+    <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
     <div class="container mx-auto p-4">
         <h1 class="text-2xl font-bold mb-4">Shopping Cart</h1>
+        <?php if (!$isLoggedIn): ?>
+            <div class="mb-4 rounded-lg border border-yellow-200 bg-yellow-50 p-3 text-sm text-yellow-800">
+                Please <a href="<?php echo htmlspecialchars($loginRedirect); ?>" class="font-semibold underline">log in</a> to add items to your cart.
+            </div>
+        <?php endif; ?>
         <?php if (empty($cartItems)): ?>
             <p>Your cart is empty.</p>
         <?php else: ?>
@@ -104,6 +130,7 @@ function calculateTotalPrice($cartItems)
             </div>
         <?php endif; ?>
     </div>
+    <?php require_once __DIR__ . '/../includes/layout/footer.php'; ?>
 </body>
 
 </html>
