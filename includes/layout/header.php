@@ -19,32 +19,29 @@ $scriptPath = $_SERVER['SCRIPT_NAME'];
 // Normalize to the relative path used in URLs (strip leading / if present)
 $currentPath = ltrim($scriptPath, '/');
 
-function isActive($navUrl, $currentPath): string {
+function isActive($navUrl, $currentPath): string
+{
     // Strip any leading / from nav URL for comparison
     $navPath = ltrim($navUrl, '/');
     return $currentPath === $navPath ? 'text-green-200 underline' : 'hover:text-green-200';
 }
 ?>
-
-<header class="bg-gradient-to-r from-green-600 to-emerald-500 text-white">
-    <div class="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
-        <div>
-            <h1 class="text-3xl font-bold text-green-100"><?php echo htmlspecialchars($brandName); ?></h1>
-            <p class="text-sm text-green-100"><?php echo htmlspecialchars($tagline); ?></p>
+<header class="bg-green-500 text-white py-4">
+    <div class="container mx-auto flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="/ecommerce-projectphp/assets/logo.png" alt="Logo" class="h-10 w-30 rounded-full mr-3">
         </div>
-        <nav class="flex flex-wrap items-center gap-4 text-sm font-semibold">
-            <ul class="flex flex-wrap items-center gap-4 text-sm font-semibold">
-                <li><a href="<?php echo htmlspecialchars($homeUrl); ?>" class="<?php echo isActive($homeUrl, $currentPage); ?>">Home</a></li>
-                <li><a href="<?php echo htmlspecialchars($cartUrl); ?>" class="<?php echo isActive($cartUrl, $currentPage); ?>">Cart</a></li>
-                <li><a href="<?php echo htmlspecialchars($adminUrl); ?>" class="<?php echo isActive($adminUrl, $currentPage); ?>">Admin</a></li>
-                <?php if (!empty($isLoggedIn)): ?>
-                    <li class="text-green-100">Hi, <?php echo htmlspecialchars($userName ?? ''); ?></li>
-                    <li><a href="<?php echo htmlspecialchars($logoutUrl); ?>" class="hover:text-green-200">Logout</a></li>
-                <?php else: ?>
-                    <li><a href="<?php echo htmlspecialchars($loginUrl); ?>" class="<?php echo isActive($loginUrl, $currentPage); ?>">Login</a></li>
-                <?php endif; ?>
-            </ul>
-            <button id="open-register-btn" class="px-3 py-1 bg-green-500 text-white rounded">Register</button>
+        <nav class="flex space-x-4 items-center">
+            <a href="<?php echo htmlspecialchars($homeUrl); ?>" class="text-white hover:text-gray-200">Home</a>
+            <a href="<?php echo htmlspecialchars($cartUrl); ?>" class="text-white hover:text-gray-200">Cart</a>
+            <a href="<?php echo htmlspecialchars($adminUrl); ?>" class="text-white hover:text-gray-200">Admin</a>
+            <?php if (!empty($isLoggedIn)): ?>
+                <span class="text-white">Hi, <?php echo htmlspecialchars($userName ?? ''); ?></span>
+                <a href="<?php echo htmlspecialchars($logoutUrl); ?>" class="text-white hover:text-gray-200">Logout</a>
+            <?php else: ?>
+                <a href="<?php echo htmlspecialchars($loginUrl); ?>" class="text-white hover:text-gray-200">Login</a>
+                <a href="pages/register.php" class="bg-white text-green-500 px-4 py-2 rounded-lg hover:bg-gray-100">Register</a>
+            <?php endif; ?>
         </nav>
     </div>
     <?php if ($showHero): ?>

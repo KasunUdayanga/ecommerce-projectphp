@@ -578,3 +578,38 @@ function clearCart()
         return 'LKR ' . number_format((float)$amount, 2);
     }
 }
+
+function createOrder($userId, $cartItems)
+{
+    $conn = getDbConnection();
+    $totalPrice = 0;
+
+    // Calculate total price
+    foreach ($cartItems as $item) {
+        $totalPrice += $item['price'] * $item['quantity'];
+    }
+
+    // Insert into orders table
+    $stmt = $conn->prepare("INSERT INTO orders (user_id, total_price) VALUES (?, ?)");
+    $stmt->bind_param("id", $userId, $totalPrice);
+    $stmt->execute();
+    $orderId = $stmt->insert_id;
+    $stmt->close();
+
+    // Insert into order_items table and update product stock
+    foreach ($cartItems as $item) {
+        $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("iiid", $orderId, $item['id'], $item['quantity'], $item['price']);
+        $stmt->execute();
+        $stmt->close();
+
+        // Update product stock
+        $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+        $stmt->bind_param("ii", $item['quantity'], $item['id']);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    $conn->close();
+    return $orderId;
+}
