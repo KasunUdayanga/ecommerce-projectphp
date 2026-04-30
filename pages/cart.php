@@ -75,7 +75,7 @@ function calculateTotalPrice($cartItems)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="../assets/css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <title>Shopping Cart</title>
 </head>
 
@@ -108,14 +108,14 @@ function calculateTotalPrice($cartItems)
                                 <form method="POST" action="cart.php">
                                     <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
                                     <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1" class="border p-1">
-                                    <button type="submit" name="action" value="update" class="bg-green-500 text-white px-2 py-1 hover:bg-green-600">Update</button>
+                                    <button type="submit" name="action" value="update" class="bg-green-500 text-white px-2 py-1 rounded-lg hover:bg-green-600">Update</button>
                                 </form>
                             </td>
                             <td class="border px-4 py-2"><?php echo number_format($item['price'], 2); ?></td>
                             <td class="border px-4 py-2">
                                 <form method="POST" action="cart.php">
                                     <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
-                                    <button type="submit" name="action" value="remove" class="bg-red-500 text-white px-2 py-1">Remove</button>
+                                    <button type="submit" name="action" value="remove" class="bg-red-500 text-white px-2 py-1 rounded-lg">Remove</button>
                                 </form>
                             </td>
                         </tr>
@@ -126,7 +126,7 @@ function calculateTotalPrice($cartItems)
                 <strong>Total Price: <?php echo number_format($totalPrice, 2); ?></strong>
             </div>
             <div class="mt-4">
-                <a href="checkout.php" class="bg-green-500 text-white px-4 py-2">Proceed to Checkout</a>
+                <a href="checkout.php" class="bg-green-500 text-white px-4 py-2 rounded-lg">Proceed to Checkout</a>
             </div>
         <?php endif; ?>
     </div>

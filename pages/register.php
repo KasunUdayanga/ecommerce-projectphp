@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/functions.php';
 
 // Validate request method
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /index.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -39,7 +39,7 @@ if (!preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password) || !p
 // If there are validation errors, redirect back with the error
 if ($error) {
     $_SESSION['register_error'] = $error;
-    header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/index.php'));
+    header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '../index.php'));
     exit;
 }
 
@@ -47,7 +47,7 @@ if ($error) {
 $created = registerUser($name, $email, $password);
 if (!$created) {
     $_SESSION['register_error'] = 'Email already registered or server error.';
-    header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/index.php'));
+    header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '../index.php'));
     exit;
 }
 
@@ -57,5 +57,5 @@ $_SESSION['user_name'] = $name;
 unset($_SESSION['register_error']);
 
 // Redirect to the homepage or the referring page
-header('Location: /index.php');
+header('Location: ../index.php');
 exit;

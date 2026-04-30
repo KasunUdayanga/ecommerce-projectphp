@@ -40,7 +40,7 @@ if (!$product) {
 <body class="bg-white text-black">
     <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
     <div class="container mx-auto p-6">
-        <a href="index.php" class="text-sm text-green-600 hover:text-green-700">← Back to Products</a>
+        <a href="../index.php" class="text-sm text-green-600 hover:text-green-700">← Back to Products</a>
         <div class="mt-4 grid gap-8 lg:grid-cols-2">
             <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
                 <div class="product-media">

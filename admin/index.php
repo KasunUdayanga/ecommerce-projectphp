@@ -22,7 +22,7 @@ $message = $_GET['message'] ?? '';
     <header class="bg-black text-white p-4 flex items-center justify-between">
         <h1 class="text-xl font-bold">Admin Dashboard</h1>
         <div class="flex gap-3">
-            <a href="../index.php" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">View Store</a>
+            <a href="../pages/products.php" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">View Store</a>
             <a href="create.php" class="bg-green-500 px-3 py-1 rounded hover:bg-green-600">Add Product</a>
             <a href="logout.php" class="bg-red-500 px-3 py-1 rounded hover:bg-red-600">Logout</a>
         </div>

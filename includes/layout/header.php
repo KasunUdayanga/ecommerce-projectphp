@@ -1,11 +1,15 @@
 <?php
 $brandName = $brandName ?? 'Green Store';
 $tagline = $tagline ?? 'Fresh finds delivered to your door.';
-$homeUrl = $homeUrl ?? ($basePath ?? '') . 'index.php';
-$cartUrl = $cartUrl ?? ($basePath ?? '') . 'cart.php';
-$adminUrl = $adminUrl ?? ($basePath ?? '') . 'admin/login.php';
-$loginUrl = $loginUrl ?? ($basePath ?? '') . 'login.php';
-$logoutUrl = $logoutUrl ?? ($basePath ?? '') . 'logout.php';
+
+// Auto base path: if current script is under /pages/, go up one level
+$appBase = $appBase ?? '/ecommerce-projectphp/';
+$homeUrl = ($appBase . 'index.php');
+$cartUrl = $cartUrl ?? ($appBase . 'pages/cart.php');
+$adminUrl = $adminUrl ?? ($appBase . 'admin/login.php');
+$loginUrl = $loginUrl ?? ($appBase . 'pages/login.php');
+$logoutUrl =  ($appBase . 'pages/logout.php');
+$registerUrl = $registerUrl ?? ($appBase . 'pages/register.php');
 $showHero = $showHero ?? false;
 $heroTitle = $heroTitle ?? 'Discover modern essentials';
 $heroSubtitle = $heroSubtitle ?? 'Shop curated products, add them to your cart, and checkout in minutes.';
@@ -25,7 +29,8 @@ function isActive($navUrl, $currentPath): string
     $navPath = ltrim($navUrl, '/');
     return $currentPath === $navPath ? 'text-green-200 underline' : 'hover:text-green-200';
 }
-?>
+?><script src="https://cdn.tailwindcss.com"></script>
+
 <header class="bg-green-500 text-white py-4">
     <div class="container mx-auto flex items-center justify-between">
         <div class="flex items-center">
@@ -40,7 +45,7 @@ function isActive($navUrl, $currentPath): string
                 <a href="<?php echo htmlspecialchars($logoutUrl); ?>" class="text-white hover:text-gray-200">Logout</a>
             <?php else: ?>
                 <a href="<?php echo htmlspecialchars($loginUrl); ?>" class="text-white hover:text-gray-200">Login</a>
-                <a href="pages/register.php" class="bg-white text-green-500 px-4 py-2 rounded-lg hover:bg-gray-100">Register</a>
+                <a href="<?php echo htmlspecialchars($registerUrl); ?>" class="bg-white text-green-500 px-4 py-2 rounded-lg hover:bg-gray-100">Register</a>
             <?php endif; ?>
         </nav>
     </div>

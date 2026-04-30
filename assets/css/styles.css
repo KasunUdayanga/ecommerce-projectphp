@@ -1,3 +1,20 @@
+html,
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
 
 body {
   font-family: "Poppins", sans-serif;
@@ -12,7 +29,7 @@ h4,
 h5,
 h6 {
   color: #16a34a;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 a {
@@ -26,7 +43,7 @@ a:hover {
 button {
   background-color: #16a34a;
   color: #052e16;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 button:hover {

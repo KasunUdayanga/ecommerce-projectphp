@@ -55,11 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php foreach ($cartItems as $item): ?>
                     <li class="flex justify-between border-b border-gray-200 pb-2">
                         <span><?php echo htmlspecialchars($item['name']); ?> (x<?php echo (int) $item['quantity']; ?>)</span>
-                        <span>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></span>
+                        <span>LKR<?php echo number_format($item['price'] * $item['quantity'], 2); ?></span>
                     </li>
                 <?php endforeach; ?>
             </ul>
-            <p class="mt-4 font-semibold">Total: $<?php echo number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cartItems)), 2); ?></p>
+            <p class="mt-4 font-semibold">Total: LKR<?php echo number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cartItems)), 2); ?></p>
             <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Place Order</button>
         </form>
     </div>
