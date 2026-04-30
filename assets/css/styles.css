@@ -89,3 +89,25 @@ button:hover {
 .cart-item:hover {
   background-color: #dcfce7;
 }
+
+/* Modal styles */
+.modal {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Modal backdrop animation */
+.modal-backdrop {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+}

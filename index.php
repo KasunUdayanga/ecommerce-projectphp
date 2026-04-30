@@ -99,7 +99,12 @@ $heroSecondaryLabel = 'View Cart';
                     <h3 class="text-xl font-bold">Login Required</h3>
                     <button type="button" data-login-close class="text-gray-400 hover:text-gray-600">✕</button>
                 </div>
-                <p class="text-gray-600 mb-4">Please sign in to add items to your cart.</p>
+                <?php if (!empty($_SESSION['register_error'])): ?>
+                    <p class="text-red-600 mb-4"><?php echo htmlspecialchars($_SESSION['register_error']); ?></p>
+                    <?php unset($_SESSION['register_error']); ?>
+                <?php else: ?>
+                    <p class="text-gray-600 mb-4">Please sign in to add items to your cart.</p>
+                <?php endif; ?>
                 <form method="POST" action="pages/login.php" class="space-y-4">
                     <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirectUrl); ?>">
                     <div>
