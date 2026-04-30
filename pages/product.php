@@ -20,6 +20,7 @@ if (!$product) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="../assets/css/styles.css" rel="stylesheet">
     <title><?php echo htmlspecialchars($product['name']); ?></title>
 </head>
@@ -38,7 +39,7 @@ if (!$product) {
             <input type="hidden" name="quantity" value="1">
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Add to Cart</button>
         </form>
-        <a href="index.php" class="text-light-green-500 hover:underline">Back to Products</a>
+        <a href="index.php" class="text-green-500 hover:text-green-600 hover:underline">Back to Products</a>
     </div>
 </body>
 

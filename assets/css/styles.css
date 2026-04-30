@@ -1,43 +1,72 @@
 body {
-    @apply bg-white text-black;
+  background-color: #ffffff;
+  color: #000000;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    @apply text-green-600;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #16a34a;
 }
 
 a {
-    @apply text-lightgreen-500 hover:text-green-500;
+  color: #22c55e;
+}
+
+a:hover {
+  color: #16a34a;
 }
 
 button {
-    @apply bg-green-600 text-white hover:bg-green-500;
+  background-color: #16a34a;
+  color: #052e16;
+}
+
+button:hover {
+  background-color: #15803d;
 }
 
 .header {
-    @apply bg-black text-white p-4;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 1rem;
 }
 
 .footer {
-    @apply bg-black text-white p-4;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 1rem;
 }
 
 .card {
-    @apply border border-gray-300 rounded-lg shadow-lg p-4;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
 }
 
 .card:hover {
-    @apply shadow-xl;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .product-image {
-    @apply w-full h-48 object-cover rounded-lg;
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
 }
 
 .cart-item {
-    @apply flex justify-between items-center p-2 border-b border-gray-200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .cart-item:hover {
-    @apply bg-lightgreen-100;
+  background-color: #dcfce7;
 }

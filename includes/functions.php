@@ -74,6 +74,36 @@ function fetchFeaturedProducts($limit = 6)
     return fetchProducts($limit);
 }
 
+function getSampleProducts()
+{
+    return [
+        [
+            'id' => null,
+            'sample_id' => 'sample-1',
+            'name' => 'Classic Canvas Sneakers',
+            'description' => 'Lightweight everyday sneakers with breathable canvas and a durable sole.',
+            'price' => 39.99,
+            'is_sample' => true,
+        ],
+        [
+            'id' => null,
+            'sample_id' => 'sample-2',
+            'name' => 'Eco Cotton Tee',
+            'description' => 'Soft organic cotton tee with a relaxed fit for all-day comfort.',
+            'price' => 19.5,
+            'is_sample' => true,
+        ],
+        [
+            'id' => null,
+            'sample_id' => 'sample-3',
+            'name' => 'Minimalist Backpack',
+            'description' => 'Roomy backpack with padded straps and a sleek, water-resistant finish.',
+            'price' => 54.0,
+            'is_sample' => true,
+        ],
+    ];
+}
+
 function getProductById($productId)
 {
     if ($productId <= 0) {
@@ -115,6 +145,34 @@ function addToCart($productId, $quantity = 1)
             'name' => $product['name'],
             'price' => (float) $product['price'],
             'quantity' => $quantity,
+        ];
+    }
+
+    return true;
+}
+
+function addSampleToCart($sampleId, $name, $price, $quantity = 1)
+{
+    ensureSessionStarted();
+    $quantity = max(1, (int) $quantity);
+    $sampleId = trim((string) $sampleId);
+    if ($sampleId === '' || $name === '') {
+        return false;
+    }
+
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
+    }
+
+    if (isset($_SESSION['cart'][$sampleId])) {
+        $_SESSION['cart'][$sampleId]['quantity'] += $quantity;
+    } else {
+        $_SESSION['cart'][$sampleId] = [
+            'id' => $sampleId,
+            'name' => $name,
+            'price' => (float) $price,
+            'quantity' => $quantity,
+            'is_sample' => true,
         ];
     }
 

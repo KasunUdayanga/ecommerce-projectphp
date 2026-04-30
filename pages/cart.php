@@ -10,12 +10,18 @@ if (!isset($_SESSION['cart'])) {
 // Handle cart updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'add';
-    $productId = isset($_POST['product_id']) ? (int) $_POST['product_id'] : 0;
+    $productId = $_POST['product_id'] ?? '';
     $quantity = isset($_POST['quantity']) ? (int) $_POST['quantity'] : 1;
 
     switch ($action) {
         case 'add':
-            addToCart($productId, $quantity);
+            addToCart((int) $productId, $quantity);
+            break;
+        case 'add_sample':
+            $sampleId = $_POST['sample_id'] ?? $productId;
+            $name = $_POST['name'] ?? '';
+            $price = $_POST['price'] ?? 0;
+            addSampleToCart($sampleId, $name, $price, $quantity);
             break;
         case 'remove':
             removeFromCart($productId);
@@ -24,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             updateCart($productId, $quantity);
             break;
         default:
-            addToCart($productId, $quantity);
+            addToCart((int) $productId, $quantity);
             break;
     }
 }
@@ -48,6 +54,7 @@ function calculateTotalPrice($cartItems)
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="../assets/css/styles.css" rel="stylesheet">
     <title>Shopping Cart</title>
 </head>
@@ -75,7 +82,7 @@ function calculateTotalPrice($cartItems)
                                 <form method="POST" action="cart.php">
                                     <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
                                     <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1" class="border p-1">
-                                    <button type="submit" name="action" value="update" class="bg-light-green-500 text-white px-2 py-1">Update</button>
+                                    <button type="submit" name="action" value="update" class="bg-green-500 text-white px-2 py-1 hover:bg-green-600">Update</button>
                                 </form>
                             </td>
                             <td class="border px-4 py-2"><?php echo number_format($item['price'], 2); ?></td>
