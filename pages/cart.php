@@ -58,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $cartItems = getCartItems();
 $totalPrice = calculateTotalPrice($cartItems);
+$shippingFee = 250.00; // fixed shipping fee
+$grandTotal = $totalPrice + $shippingFee;
 
 function calculateTotalPrice($cartItems)
 {
@@ -140,6 +142,22 @@ function calculateTotalPrice($cartItems)
             box-shadow: 0 10px 28px rgba(22, 163, 74, .08);
             padding: 1.5rem;
         }
+
+        @media (min-width: 768px) {
+            .cart-card {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .cart-card>.flex-grow {
+                flex: 1 1 auto;
+            }
+
+            .cart-card form.mt-4 {
+                width: 220px;
+            }
+        }
     </style>
 </head>
 
@@ -173,16 +191,9 @@ function calculateTotalPrice($cartItems)
                 <!-- Cart Items Grid -->
                 <div class="lg:col-span-2">
                     <div class="cart-shell">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($cartItems as $item): ?>
                                 <div class="cart-card p-4">
-                                    <div class="cart-image">
-                                        <?php if (!empty($item['image'])): ?>
-                                            <img src="<?php echo htmlspecialchars(getProductImageUrl($item['image'])); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
-                                        <?php else: ?>
-                                            <div class="h-44 w-full rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">Product</div>
-                                        <?php endif; ?>
-                                    </div>
                                     <div class="flex flex-col flex-grow p-2">
                                         <h3 class="font-bold text-lg text-gray-800"><?php echo htmlspecialchars($item['name']); ?></h3>
                                         <p class="text-sm text-gray-600 mt-1">Unit Price: <span class="font-semibold text-green-600">LKR <?php echo number_format($item['price'], 2); ?></span></p>
@@ -226,17 +237,13 @@ function calculateTotalPrice($cartItems)
                             </div>
                             <div class="flex justify-between text-gray-700">
                                 <span>Shipping:</span>
-                                <span class="font-semibold">LKR 0.00</span>
-                            </div>
-                            <div class="flex justify-between text-gray-700">
-                                <span>Tax:</span>
-                                <span class="font-semibold">LKR 0.00</span>
+                                <span class="font-semibold">LKR <?php echo number_format($shippingFee, 2); ?></span>
                             </div>
                         </div>
 
                         <div class="flex justify-between items-center mt-4 mb-6">
                             <span class="text-lg font-bold text-gray-800">Total:</span>
-                            <span class="text-2xl font-bold text-green-600">LKR <?php echo number_format($totalPrice, 2); ?></span>
+                            <span class="text-2xl font-bold text-green-600">LKR <?php echo number_format($grandTotal, 2); ?></span>
                         </div>
 
                         <div class="space-y-2">
