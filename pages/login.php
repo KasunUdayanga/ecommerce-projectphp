@@ -44,13 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+        <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 
 <body class="bg-white text-black">
     <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
-    <div class="min-h-screen flex items-center justify-center p-4">
+    <main class="flex-1 flex items-center justify-center p-4">
         <div class="w-full max-w-md border border-gray-200 rounded-2xl shadow-xl p-6 bg-white">
             <h1 class="text-2xl font-bold mb-2 text-center">Welcome Back</h1>
             <p class="text-gray-600 text-center mb-6">Sign in to add products to your cart.</p>
@@ -70,8 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">Sign In</button>
             </form>
             <p class="text-sm text-gray-500 mt-4 text-center">Demo user: customer@example.com / customer123</p>
+            <p class="text-sm text-gray-500 mt-2 text-center">Don't have an account? <a class="text-green-600 hover:underline" href="<?php echo htmlspecialchars($registerUrl); ?>">Register</a></p>
         </div>
-    </div>
+    </main>
     <?php require_once __DIR__ . '/../includes/layout/footer.php'; ?>
 </body>
 

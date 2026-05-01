@@ -1,9 +1,8 @@
 <?php
 $footerText = $footerText ?? ('© ' . date('Y') . ' Green Store. All rights reserved.');
 ?>
-<!-- Add this in the <head> section -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-<footer class="bg-gray-900 text-white py-4">
+<footer class="mt-auto bg-gray-900 text-white py-4">
     <div class="container mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
             <img src="/ecommerce-projectphp/assets/logo.png" alt="Logo" class="h-10 w-30">

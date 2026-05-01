@@ -1,17 +1,18 @@
 <?php
 session_start();
-include '../includes/functions.php';
+include_once __DIR__ . '/../includes/functions.php';
 
 $isLoggedIn = isUserLoggedIn();
 $userName = getLoggedInUserName();
-$loginRedirect = 'login.php?redirect=' . urlencode($_SERVER['REQUEST_URI'] ?? '/pages/cart.php');
+$appBase = '/ecommerce-projectphp/';
+$loginRedirect = $appBase . 'pages/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI'] ?? ($appBase . 'pages/cart.php'));
 $brandName = 'Green Store';
 $tagline = 'Fresh finds delivered to your door.';
-$homeUrl = 'index.php';
-$cartUrl = 'cart.php';
-$adminUrl = '../admin/login.php';
+$homeUrl = $appBase . 'index.php';
+$cartUrl = $appBase . 'pages/cart.php';
+$adminUrl = $appBase . 'admin/login.php';
 $loginUrl = $loginRedirect;
-$logoutUrl = 'logout.php';
+$logoutUrl = $appBase . 'pages/logout.php';
 $showHero = false;
 
 // Initialize cart
@@ -75,8 +76,9 @@ function calculateTotalPrice($cartItems)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <title>Shopping Cart</title>
+    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
 </head>
 
 <body class="bg-white text-black">
@@ -96,7 +98,7 @@ function calculateTotalPrice($cartItems)
                     <tr class="bg-green-500 text-white">
                         <th class="border px-4 py-2">Product</th>
                         <th class="border px-4 py-2">Quantity</th>
-                        <th class="border px-4 py-2">Price</th>
+                        <th class="border px-4 py-2">Unit Price</th>
                         <th class="border px-4 py-2">Action</th>
                     </tr>
                 </thead>

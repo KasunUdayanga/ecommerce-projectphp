@@ -20,8 +20,8 @@ $adminUrl = 'admin/login.php';
 $loginUrl = 'pages/login.php?redirect=' . urlencode($redirectUrl);
 $logoutUrl = 'pages/logout.php';
 $showHero = true;
-$heroTitle = 'Discover modern essentials';
-$heroSubtitle = 'Shop curated products, add them to your cart, and checkout in minutes.';
+$heroTitle = 'Nature in Every Drop';
+$heroSubtitle = '"Pure herbal care, thoughtfully chosen for your daily wellness."';
 $heroPrimaryUrl = 'pages/products.php';
 $heroPrimaryLabel = 'Browse Products';
 $heroSecondaryUrl = $cartUrl;
@@ -35,7 +35,7 @@ $showSamples = false;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenStore</title>
-    <link rel="icon" href="ecommerce-projectphp/assets/logo.png" type="image/png">
+    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -104,7 +104,7 @@ $showSamples = false;
             <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-xl font-bold">Login Required</h3>
-                    <button type="button" data-login-close class="text-gray-400 hover:text-gray-600">✕</button>
+                    <button type="button" data-login-close class="inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-100 hover:bg-gray-100 hover:text-gray-600">✕</button>
                 </div>
                 <p class="text-gray-600 mb-4">Please sign in to add items to your cart.</p>
                 <form method="POST" action="pages/login.php" class="space-y-4">

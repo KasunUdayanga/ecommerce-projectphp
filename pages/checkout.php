@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="../assets/css/styles.css" rel="stylesheet">
     <title>Checkout</title>
+    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
 </head>
 
 <body class="bg-white text-black">

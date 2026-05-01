@@ -548,7 +548,7 @@ function clearCart()
         $stmt->close();
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $name, $email, $hash);
         $ok = $stmt->execute();
         if (!$ok) {
@@ -563,7 +563,7 @@ function clearCart()
     function getUserByEmail(string $email)
     {
         $conn = getDbConnection();
-        $stmt = $conn->prepare("SELECT id, name, email, password_hash FROM users WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, username, email, password FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $res = $stmt->get_result();

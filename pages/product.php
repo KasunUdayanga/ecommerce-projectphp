@@ -33,8 +33,9 @@ if (!$product) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="../assets/css/styles.css" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
     <title><?php echo htmlspecialchars($product['name']); ?></title>
+        <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
 </head>
 
 <body class="bg-white text-black">

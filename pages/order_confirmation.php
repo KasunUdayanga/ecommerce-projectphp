@@ -35,6 +35,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation</title>
+        <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -60,7 +61,7 @@ $conn->close();
             </p>
         </div>
         <div class="text-center mt-6">
-            <a href="index.php" class="bg-green-500 text-white px-6 py-2 rounded-lg shadow hover:bg-green-600">
+            <a href="../index.php" class="bg-green-500 text-white px-6 py-2 rounded-lg shadow hover:bg-green-600">
                 Back to Home
             </a>
         </div>
