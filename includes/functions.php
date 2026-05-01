@@ -185,6 +185,28 @@ function fetchFeaturedProducts($limit = 6)
     return fetchProducts($limit);
 }
 
+function searchProductsByName($query, $limit = 200)
+{
+    $query = trim((string) $query);
+    if ($query === '') {
+        return fetchProducts((int) $limit);
+    }
+
+    $conn = getDbConnection();
+    $sql = "SELECT * FROM products WHERE name LIKE ? ORDER BY created_at DESC LIMIT ?";
+    $stmt = $conn->prepare($sql);
+    $searchTerm = '%' . $query . '%';
+    $limit = (int) $limit;
+    $stmt->bind_param("si", $searchTerm, $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $products = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    $conn->close();
+
+    return $products;
+}
+
 
 function getProductById($productId)
 {

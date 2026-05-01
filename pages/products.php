@@ -3,7 +3,8 @@ session_start();
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/functions.php';
 
-$products = fetchProducts(200);
+$searchQuery = trim($_GET['q'] ?? '');
+$products = $searchQuery !== '' ? searchProductsByName($searchQuery, 200) : fetchProducts(200);
 $isLoggedIn = isUserLoggedIn();
 $userName = getLoggedInUserName() ?? '';
 $redirectUrl = $_SERVER['REQUEST_URI'] ?? '/pages/products.php';
@@ -33,17 +34,37 @@ $logoutUrl = 'logout.php';
         <?php include __DIR__ . '/../includes/layout/header.php'; ?>
 
         <main class="content container mx-auto px-4 py-10">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-semibold">All Products</h2>
-                <span class="text-sm text-gray-500">Browse everything</span>
+            <div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold">All Products</h2>
+                    <span class="text-sm text-gray-500">Browse everything</span>
+                </div>
+                <form method="GET" action="products.php" class="flex w-full max-w-md items-center gap-2">
+                    <input
+                        type="text"
+                        name="q"
+                        value="<?php echo htmlspecialchars($searchQuery); ?>"
+                        placeholder="Search products by name"
+                        class="w-full rounded-lg border border-gray-300 p-2 focus:border-green-500 focus:outline-none">
+                    <button type="submit" class="rounded-lg bg-black px-4 py-2 text-white hover:bg-gray-800">Search</button>
+                </form>
             </div>
 
+            <?php if ($searchQuery !== ''): ?>
+                <p class="mb-4 text-sm text-gray-600">
+                    Search results for "<?php echo htmlspecialchars($searchQuery); ?>": <?php echo count($products); ?> item(s)
+                </p>
+            <?php endif; ?>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <?php if (empty($products)): ?>
+                    <p class="text-gray-600">No products matched your search.</p>
+                <?php endif; ?>
                 <?php foreach ($products as $product): ?>
                     <div class="border border-gray-200 bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
                         <div class="product-media">
                             <?php if (!empty($product['image'])): ?>
-                                <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'],'../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="w-full h-48 object-cover rounded-lg">
+                                <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'], '../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="w-full h-48 object-cover rounded-lg">
                             <?php else: ?>
                                 <img src="../assets/images/placeholder.png" alt="No images available" class="w-full h-48 object-cover rounded-lg">
                             <?php endif; ?>
