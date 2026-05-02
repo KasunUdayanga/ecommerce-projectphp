@@ -224,6 +224,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             </div>
 
+            <div class="mt-4">
+                <a href="google_login.php?redirect=<?php echo urlencode($redirect); ?>" class="w-full inline-flex items-center justify-center gap-3 bg-white border border-gray-200 text-gray-800 py-3 rounded-lg hover:bg-gray-50 transition-colors shadow-sm">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5">
+                    <span class="font-medium">Sign in with Google</span>
+                </a>
+            </div>
+
             <div class="mt-6 p-4 bg-green-50 rounded-lg border border-green-200 text-center">
                 <p class="text-sm text-gray-700">
                     Don't have an account?<br>

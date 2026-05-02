@@ -38,7 +38,7 @@ function getDbConnection()
 {
     global $db_config;
     if (!isset($db_config) || !is_array($db_config)) {
-        $db_config = require_once __DIR__ . '/config.php';
+        $db_config = include_once __DIR__ . '/config.php';
     }
     $config = is_array($db_config) ? $db_config : [];
     $dbHost = $config['db_host'] ?? '';
@@ -65,41 +65,29 @@ function ensureDatabaseSchema($conn)
         runSchemaSetup($conn);
     }
 
-    $columnCheck = $conn->query("SHOW COLUMNS FROM products LIKE 'image'");
-    if ($columnCheck && $columnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE products ADD COLUMN image VARCHAR(255) DEFAULT NULL AFTER description");
-    }
+    ensureColumnExists($conn, 'products', 'image', 'image VARCHAR(255) DEFAULT NULL AFTER description');
+    ensureColumnExists($conn, 'users', 'address', "address VARCHAR(255) NOT NULL DEFAULT '' AFTER email");
+    ensureColumnExists($conn, 'users', 'phone_number', "phone_number VARCHAR(20) NOT NULL DEFAULT '' AFTER address");
+    ensureColumnExists($conn, 'orders', 'shipping_fee', 'shipping_fee DECIMAL(10, 2) NOT NULL DEFAULT 0.00 AFTER total_price');
+    ensureColumnExists($conn, 'orders', 'grand_total', 'grand_total DECIMAL(10, 2) NOT NULL DEFAULT 0.00 AFTER shipping_fee');
+    ensureColumnExists($conn, 'orders', 'payment_method', "payment_method VARCHAR(30) NOT NULL DEFAULT 'cod' AFTER grand_total");
+    ensureColumnExists($conn, 'orders', 'payment_status', "payment_status VARCHAR(30) NOT NULL DEFAULT 'pending' AFTER payment_method");
+    ensureColumnExists($conn, 'orders', 'order_status', "order_status VARCHAR(30) NOT NULL DEFAULT 'pending' AFTER payment_status");
+    ensureColumnExists($conn, 'orders', 'confirmed_at', 'confirmed_at TIMESTAMP NULL DEFAULT NULL AFTER order_status');
 
-    $addressColumnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'address'");
-    if ($addressColumnCheck && $addressColumnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE users ADD COLUMN address VARCHAR(255) NOT NULL DEFAULT '' AFTER email");
-    }
+    backfillLegacyOrderTotals($conn);
+}
 
-    $phoneColumnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'phone_number'");
-    if ($phoneColumnCheck && $phoneColumnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE users ADD COLUMN phone_number VARCHAR(20) NOT NULL DEFAULT '' AFTER address");
+function ensureColumnExists($conn, $table, $column, $definition)
+{
+    $check = $conn->query("SHOW COLUMNS FROM {$table} LIKE '{$column}'");
+    if ($check && $check->num_rows === 0) {
+        $conn->query("ALTER TABLE {$table} ADD COLUMN {$definition}");
     }
+}
 
-    $shippingColumnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'shipping_fee'");
-    if ($shippingColumnCheck && $shippingColumnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE orders ADD COLUMN shipping_fee DECIMAL(10, 2) NOT NULL DEFAULT 0.00 AFTER total_price");
-    }
-
-    $grandTotalColumnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'grand_total'");
-    if ($grandTotalColumnCheck && $grandTotalColumnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE orders ADD COLUMN grand_total DECIMAL(10, 2) NOT NULL DEFAULT 0.00 AFTER shipping_fee");
-    }
-
-    $orderStatusColumnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'order_status'");
-    if ($orderStatusColumnCheck && $orderStatusColumnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE orders ADD COLUMN order_status VARCHAR(30) NOT NULL DEFAULT 'pending' AFTER grand_total");
-    }
-
-    $confirmedAtColumnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'confirmed_at'");
-    if ($confirmedAtColumnCheck && $confirmedAtColumnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE orders ADD COLUMN confirmed_at TIMESTAMP NULL DEFAULT NULL AFTER order_status");
-    }
-
+function backfillLegacyOrderTotals($conn)
+{
     // Backfill legacy rows that were saved before shipping columns existed.
     $conn->query("UPDATE orders SET shipping_fee = 250.00 WHERE shipping_fee = 0.00 AND total_price > 0.00 AND grand_total = 0.00");
     $conn->query("UPDATE orders SET grand_total = total_price + shipping_fee WHERE grand_total = 0.00 AND total_price > 0.00");
@@ -630,6 +618,43 @@ function clearCart()
         return $user;
     }
 
+    function getUserById(int $id)
+    {
+        $conn = getDbConnection();
+        $stmt = $conn->prepare("SELECT id, username, email, address, phone_number FROM users WHERE id = ? LIMIT 1");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $user = $res->fetch_assoc() ?: null;
+        $stmt->close();
+        $conn->close();
+        return $user;
+    }
+
+    // Update user's address and phone number
+    function updateUserContact(int $userId, string $address, string $phoneNumber)
+    {
+        $conn = getDbConnection();
+        $stmt = $conn->prepare("UPDATE users SET address = ?, phone_number = ? WHERE id = ?");
+        $stmt->bind_param("ssi", $address, $phoneNumber, $userId);
+        $success = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $success;
+    }
+
+    function getPaymentMethodLabel(string $paymentMethod)
+    {
+        $labels = [
+            'cod' => 'Cash on Delivery',
+            'stripe' => 'Card Payment via Stripe',
+            'payhere' => 'Card Payment via PayHere',
+            'bank_transfer' => 'Bank Account Transfer',
+        ];
+
+        return $labels[$paymentMethod] ?? ucfirst(str_replace('_', ' ', $paymentMethod));
+    }
+
     // format currency as LKR
     function formatCurrency($amount)
     {
@@ -637,11 +662,19 @@ function clearCart()
     }
 }
 
-function createOrder($userId, $cartItems, $shippingFee = 0.0)
+function createOrder($userId, $cartItems, $shippingFee = 0.0, $paymentMethod = 'cod')
 {
     $conn = getDbConnection();
     $totalPrice = 0;
     $shippingFee = (float) $shippingFee;
+    $paymentMethod = trim((string) $paymentMethod) ?: 'cod';
+    if ($paymentMethod === 'cod') {
+        $paymentStatus = 'cash_on_delivery';
+    } elseif ($paymentMethod === 'bank_transfer') {
+        $paymentStatus = 'awaiting_transfer';
+    } else {
+        $paymentStatus = 'pending_payment';
+    }
 
     // Calculate total price
     foreach ($cartItems as $item) {
@@ -651,8 +684,8 @@ function createOrder($userId, $cartItems, $shippingFee = 0.0)
     $grandTotal = $totalPrice + $shippingFee;
 
     // Insert into orders table
-    $stmt = $conn->prepare("INSERT INTO orders (user_id, total_price, shipping_fee, grand_total) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("iddd", $userId, $totalPrice, $shippingFee, $grandTotal);
+    $stmt = $conn->prepare("INSERT INTO orders (user_id, total_price, shipping_fee, grand_total, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("idddss", $userId, $totalPrice, $shippingFee, $grandTotal, $paymentMethod, $paymentStatus);
     $stmt->execute();
     $orderId = $stmt->insert_id;
     $stmt->close();
@@ -678,7 +711,7 @@ function createOrder($userId, $cartItems, $shippingFee = 0.0)
 function getAdminOrders()
 {
     $conn = getDbConnection();
-    $sql = "SELECT o.id, o.user_id, o.total_price, o.shipping_fee, o.grand_total, o.order_status, o.confirmed_at, o.created_at, u.username, u.email, u.address, u.phone_number
+    $sql = "SELECT o.id, o.user_id, o.total_price, o.shipping_fee, o.grand_total, o.order_status, o.confirmed_at, o.created_at, o.payment_method, o.payment_status, u.username, u.email, u.address, u.phone_number
             FROM orders o
             INNER JOIN users u ON u.id = o.user_id
             ORDER BY o.created_at DESC";

@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS orders (
     total_price DECIMAL(10, 2) NOT NULL,
     shipping_fee DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     grand_total DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    payment_method VARCHAR(30) NOT NULL DEFAULT 'cod',
+    payment_status VARCHAR(30) NOT NULL DEFAULT 'pending',
     order_status VARCHAR(30) NOT NULL DEFAULT 'pending',
     confirmed_at TIMESTAMP NULL DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
