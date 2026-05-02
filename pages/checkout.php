@@ -10,6 +10,9 @@ if (!isUserLoggedIn()) {
 $userId = $_SESSION['user_id'];
 $userName = getLoggedInUserName(); // Ensure this is set
 $cartItems = getCartItems();
+$shippingFee = 250.00;
+$subTotal = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cartItems));
+$grandTotal = $subTotal + $shippingFee;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($cartItems)) {
@@ -19,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Create the order
-    $orderId = createOrder($userId, $cartItems);
+    $orderId = createOrder($userId, $cartItems, $shippingFee);
 
     // Clear the cart
     clearCart();
@@ -60,7 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </li>
                 <?php endforeach; ?>
             </ul>
-            <p class="mt-4 font-semibold">Total: LKR<?php echo number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cartItems)), 2); ?></p>
+            <div class="mt-4 space-y-1 text-sm text-gray-700">
+                <p class="flex justify-between"><span>Subtotal:</span><span class="font-semibold">LKR <?php echo number_format($subTotal, 2); ?></span></p>
+                <p class="flex justify-between"><span>Shipping:</span><span class="font-semibold">LKR <?php echo number_format($shippingFee, 2); ?></span></p>
+                <p class="flex justify-between border-t border-gray-200 pt-2 text-base"><span class="font-bold">Final Total:</span><span class="font-bold text-green-600">LKR <?php echo number_format($grandTotal, 2); ?></span></p>
+            </div>
             <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Place Order</button>
         </form>
     </div>

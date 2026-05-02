@@ -69,6 +69,40 @@ function ensureDatabaseSchema($conn)
     if ($columnCheck && $columnCheck->num_rows === 0) {
         $conn->query("ALTER TABLE products ADD COLUMN image VARCHAR(255) DEFAULT NULL AFTER description");
     }
+
+    $addressColumnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'address'");
+    if ($addressColumnCheck && $addressColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE users ADD COLUMN address VARCHAR(255) NOT NULL DEFAULT '' AFTER email");
+    }
+
+    $phoneColumnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'phone_number'");
+    if ($phoneColumnCheck && $phoneColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE users ADD COLUMN phone_number VARCHAR(20) NOT NULL DEFAULT '' AFTER address");
+    }
+
+    $shippingColumnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'shipping_fee'");
+    if ($shippingColumnCheck && $shippingColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE orders ADD COLUMN shipping_fee DECIMAL(10, 2) NOT NULL DEFAULT 0.00 AFTER total_price");
+    }
+
+    $grandTotalColumnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'grand_total'");
+    if ($grandTotalColumnCheck && $grandTotalColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE orders ADD COLUMN grand_total DECIMAL(10, 2) NOT NULL DEFAULT 0.00 AFTER shipping_fee");
+    }
+
+    $orderStatusColumnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'order_status'");
+    if ($orderStatusColumnCheck && $orderStatusColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE orders ADD COLUMN order_status VARCHAR(30) NOT NULL DEFAULT 'pending' AFTER grand_total");
+    }
+
+    $confirmedAtColumnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'confirmed_at'");
+    if ($confirmedAtColumnCheck && $confirmedAtColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE orders ADD COLUMN confirmed_at TIMESTAMP NULL DEFAULT NULL AFTER order_status");
+    }
+
+    // Backfill legacy rows that were saved before shipping columns existed.
+    $conn->query("UPDATE orders SET shipping_fee = 250.00 WHERE shipping_fee = 0.00 AND total_price > 0.00 AND grand_total = 0.00");
+    $conn->query("UPDATE orders SET grand_total = total_price + shipping_fee WHERE grand_total = 0.00 AND total_price > 0.00");
 }
 
 function runSchemaSetup($conn)
@@ -544,16 +578,18 @@ function clearCart()
     unset($_SESSION['cart']);
 } {
     // register user, return user id on success or false on failure
-    function registerUser(string $name, string $email, string $password)
+    function registerUser(string $name, string $email, string $password, string $address = '', string $phoneNumber = '')
     {
         $conn = getDbConnection();
 
         // ensure users table exists
         $createSql = "CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(150) NOT NULL,
-            email VARCHAR(255) NOT NULL UNIQUE,
-            password_hash VARCHAR(255) NOT NULL,
+            username VARCHAR(50) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            email VARCHAR(100) NOT NULL UNIQUE,
+            address VARCHAR(255) NOT NULL DEFAULT '',
+            phone_number VARCHAR(20) NOT NULL DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
         $conn->query($createSql);
@@ -570,8 +606,8 @@ function clearCart()
         $stmt->close();
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $name, $email, $hash);
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password, address, phone_number) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $name, $email, $hash, $address, $phoneNumber);
         $ok = $stmt->execute();
         if (!$ok) {
             $stmt->close();
@@ -601,19 +637,22 @@ function clearCart()
     }
 }
 
-function createOrder($userId, $cartItems)
+function createOrder($userId, $cartItems, $shippingFee = 0.0)
 {
     $conn = getDbConnection();
     $totalPrice = 0;
+    $shippingFee = (float) $shippingFee;
 
     // Calculate total price
     foreach ($cartItems as $item) {
         $totalPrice += $item['price'] * $item['quantity'];
     }
 
+    $grandTotal = $totalPrice + $shippingFee;
+
     // Insert into orders table
-    $stmt = $conn->prepare("INSERT INTO orders (user_id, total_price) VALUES (?, ?)");
-    $stmt->bind_param("id", $userId, $totalPrice);
+    $stmt = $conn->prepare("INSERT INTO orders (user_id, total_price, shipping_fee, grand_total) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("iddd", $userId, $totalPrice, $shippingFee, $grandTotal);
     $stmt->execute();
     $orderId = $stmt->insert_id;
     $stmt->close();
@@ -634,4 +673,32 @@ function createOrder($userId, $cartItems)
 
     $conn->close();
     return $orderId;
+}
+
+function getAdminOrders()
+{
+    $conn = getDbConnection();
+    $sql = "SELECT o.id, o.user_id, o.total_price, o.shipping_fee, o.grand_total, o.order_status, o.confirmed_at, o.created_at, u.username, u.email, u.address, u.phone_number
+            FROM orders o
+            INNER JOIN users u ON u.id = o.user_id
+            ORDER BY o.created_at DESC";
+    $result = $conn->query($sql);
+    $orders = [];
+    if ($result) {
+        $orders = $result->fetch_all(MYSQLI_ASSOC);
+    }
+    $conn->close();
+    return $orders;
+}
+
+function confirmAdminOrder($orderId)
+{
+    $conn = getDbConnection();
+    $stmt = $conn->prepare("UPDATE orders SET order_status = 'confirmed', confirmed_at = COALESCE(confirmed_at, NOW()) WHERE id = ?");
+    $orderId = (int) $orderId;
+    $stmt->bind_param("i", $orderId);
+    $success = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+    return $success;
 }

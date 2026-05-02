@@ -247,7 +247,7 @@ function calculateTotalPrice($cartItems)
                         </div>
 
                         <div class="space-y-2">
-                            <a href="checkout.php" class="block w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold text-center">
+                            <a href="checkout.php" class="block w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-100 transition-colors font-semibold text-center">
                                 Proceed to Checkout
                             </a>
                             <a href="<?php echo htmlspecialchars($homeUrl); ?>" class="block w-full bg-gray-200 text-gray-800 py-3 rounded-lg hover:bg-gray-300 transition-colors font-semibold text-center">

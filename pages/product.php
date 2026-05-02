@@ -55,7 +55,7 @@ if (!$product) {
             <div>
                 <h1 class="text-3xl font-bold mb-2"><?php echo htmlspecialchars($product['name']); ?></h1>
                 <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($product['description']); ?></p>
-                <p class="text-2xl font-semibold text-green-600 mb-6">$<?php echo number_format($product['price'], 2); ?></p>
+                <p class="text-2xl font-semibold text-green-600 mb-6">LKR<?php echo number_format($product['price'], 2); ?></p>
                 <form action="cart.php" method="post" class="flex flex-wrap gap-3">
                     <input type="hidden" name="action" value="add">
                     <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">

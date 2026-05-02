@@ -2,27 +2,6 @@
 
 This is a simple eCommerce web application built using PHP, SQL, HTML, and Tailwind CSS. The project is designed to provide a basic online shopping experience.
 
-## Project Structure
-
-```
-ecommerce-project
-├── assets
-│   └── css
-│       └── styles.css
-├── includes
-│   ├── config.php
-│   └── functions.php
-├── pages
-│   ├── index.php
-│   ├── product.php
-│   ├── cart.php
-│   └── checkout.php
-├── db
-│   └── schema.sql
-├── index.php
-└── README.md
-```
-
 ## Features
 
 - User-friendly homepage displaying featured products.

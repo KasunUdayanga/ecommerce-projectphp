@@ -88,12 +88,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #1f2937;
             margin-bottom: 0.5rem;
         }
+
+        .herb-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .herb-orb {
+            position: absolute;
+            font-size: clamp(1.4rem, 3vw, 2.8rem);
+            opacity: .8;
+            filter: blur(.2px);
+            animation: herbFloat 14s ease-in-out infinite;
+        }
+
+        .herb-orb:nth-child(2) {
+            top: 8%;
+            left: 6%;
+            animation-duration: 16s;
+        }
+
+        .herb-orb:nth-child(3) {
+            top: 14%;
+            right: 8%;
+            animation-duration: 18s;
+            animation-delay: -3s;
+        }
+
+        .herb-orb:nth-child(4) {
+            bottom: 14%;
+            left: 10%;
+            animation-duration: 15s;
+            animation-delay: -6s;
+        }
+
+        .herb-orb:nth-child(5) {
+            bottom: 10%;
+            right: 12%;
+            animation-duration: 17s;
+            animation-delay: -2s;
+        }
+
+        .herb-orb:nth-child(6) {
+            top: 48%;
+            left: 4%;
+            animation-duration: 19s;
+            animation-delay: -5s;
+        }
+
+        .herb-orb:nth-child(7) {
+            top: 42%;
+            right: 4%;
+            animation-duration: 20s;
+            animation-delay: -8s;
+        }
+
+        .herb-orb:nth-child(8) {
+            top: 64%;
+            left: 44%;
+            animation-duration: 21s;
+            animation-delay: -11s;
+        }
+
+        @keyframes herbFloat {
+
+            0%,
+            100% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate3d(10px, -16px, 0) rotate(6deg);
+            }
+
+            50% {
+                transform: translate3d(-8px, 10px, 0) rotate(-4deg);
+            }
+
+            75% {
+                transform: translate3d(12px, -8px, 0) rotate(5deg);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .herb-orb {
+                animation: none;
+            }
+        }
     </style>
 </head>
 
 <body class="bg-white text-black">
     <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
-    <main class="flex-1 flex items-center justify-center p-4 py-8">
+    <main class="relative flex-1 flex items-center justify-center p-4 py-8">
+        <div class="herb-bg" aria-hidden="true">
+            <span class="herb-orb" style="top:12%; left:18%;">🌿</span>
+            <span class="herb-orb">🍃</span>
+            <span class="herb-orb">🌱</span>
+            <span class="herb-orb">🌿</span>
+            <span class="herb-orb">🍀</span>
+            <span class="herb-orb">🌾</span>
+            <span class="herb-orb">🌱</span>
+            
+        </div>
         <div class="w-full max-w-md">
             <div class="text-center mb-6">
                 <span class="soft-badge">Sign In</span>
@@ -122,14 +222,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ✓ Sign In
                     </button>
                 </form>
-
-                <div class="mt-6 pt-6 border-t border-gray-200">
-                    <p class="text-sm text-gray-600 mb-4">
-                        <span class="font-semibold">Demo Credentials:</span><br>
-                        Email: <code class="bg-gray-100 px-2 py-1 rounded text-xs">customer@example.com</code><br>
-                        Password: <code class="bg-gray-100 px-2 py-1 rounded text-xs">customer123</code>
-                    </p>
-                </div>
             </div>
 
             <div class="mt-6 p-4 bg-green-50 rounded-lg border border-green-200 text-center">
