@@ -74,74 +74,74 @@ $message = $_GET['message'] ?? '';
 </head>
 
 <body class="bg-white text-black">
-    <header class="bg-gradient-to-r from-green-100 to-green-600 text-white p-4 flex items-center justify-between">
-        <h1 class="text-2xl font-bold">Admin Dashboard</h1>
-        <div class="flex gap-2">
-            <a href="../pages/products.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors">View Store</a>
-            <a href="orders.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors">Orders</a>
-            <a href="create.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors"> Add Product</a>
-            <a href="logout.php" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 font-medium transition-colors">Logout</a>
+    <header class="bg-gradient-to-r from-green-100 to-green-600 text-white p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-2">
+        <h1 class="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+            <a href="../pages/products.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">View Store</a>
+            <a href="orders.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">Orders</a>
+            <a href="create.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">Add Product</a>
+            <a href="logout.php" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-100 font-medium transition-colors text-sm sm:text-base">Logout</a>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-10">
-        <div class="flex flex-col gap-2 mb-6 md:flex-row md:items-center md:justify-between">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div class="flex flex-col gap-4 mb-8 md:flex-row md:items-center md:justify-between">
             <div>
                 <span class="soft-badge">Inventory</span>
-                <h2 class="mt-2 text-3xl font-bold">Products Management</h2>
+                <h2 class="mt-2 text-3xl sm:text-4xl font-bold">Products Management</h2>
             </div>
-            <a href="orders.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors">
+            <a href="orders.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">
                 Open Order Confirmations
             </a>
         </div>
 
         <?php if ($message): ?>
-            <div class="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+            <div class="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 text-sm sm:text-base">
                 <p class="font-semibold">✓ <?php echo htmlspecialchars($message); ?></p>
             </div>
         <?php endif; ?>
 
         <?php if (empty($products)): ?>
             <div class="admin-shell text-center py-12">
-                <p class="text-xl text-gray-600 mb-4">No products found yet</p>
-                <a href="create.php" class="inline-flex bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition-colors">
+                <p class="text-lg sm:text-xl text-gray-600 mb-6">No products found yet</p>
+                <a href="create.php" class="inline-flex bg-green-500 text-white py-3 px-8 rounded-lg hover:bg-green-600 transition-colors font-semibold text-sm sm:text-base">
                     Add Your First Product
                 </a>
             </div>
         <?php else: ?>
             <div class="admin-shell">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     <?php foreach ($products as $product): ?>
-                        <div class="product-card p-4">
+                        <div class="product-card p-4 sm:p-5">
                             <div class="product-image">
                                 <?php if (!empty($product['image'])): ?>
-                                    <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'], '../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                    <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'], '../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="w-full h-40 sm:h-48 object-cover">
                                 <?php else: ?>
-                                    <div class="w-full h-full bg-gray-100 flex items-center justify-center text-gray-500">No image</div>
+                                    <div class="w-full h-40 sm:h-48 bg-gray-100 flex items-center justify-center text-gray-500 text-sm">No image</div>
                                 <?php endif; ?>
                             </div>
                             <div class="flex flex-col flex-grow p-2">
-                                <h3 class="font-bold text-lg text-gray-800 line-clamp-2"><?php echo htmlspecialchars($product['name']); ?></h3>
-                                <p class="text-sm text-gray-600 mt-1 line-clamp-2"><?php echo htmlspecialchars($product['description']); ?></p>
+                                <h3 class="font-bold text-lg sm:text-xl text-gray-800 line-clamp-2"><?php echo htmlspecialchars($product['name']); ?></h3>
+                                <p class="text-xs sm:text-sm text-gray-600 mt-2 line-clamp-2"><?php echo htmlspecialchars($product['description']); ?></p>
 
                                 <div class="mt-4 space-y-2">
-                                    <div class="flex justify-between text-sm">
+                                    <div class="flex justify-between text-xs sm:text-sm">
                                         <span class="text-gray-600">Price:</span>
                                         <span class="font-bold text-green-600">LKR <?php echo number_format($product['price'], 2); ?></span>
                                     </div>
-                                    <div class="flex justify-between text-sm">
+                                    <div class="flex justify-between text-xs sm:text-sm">
                                         <span class="text-gray-600">Stock:</span>
                                         <span class="font-bold <?php echo $product['stock'] > 0 ? 'text-green-600' : 'text-red-600'; ?>"><?php echo (int) $product['stock']; ?> units</span>
                                     </div>
                                 </div>
 
-                                <div class="mt-4 pt-4 border-t border-gray-200 flex gap-2">
-                                    <a href="edit.php?id=<?php echo $product['id']; ?>" class="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm text-center">
+                                <div class="mt-4 pt-4 border-t border-gray-200 flex flex-col sm:flex-row gap-2">
+                                    <a href="edit.php?id=<?php echo $product['id']; ?>" class="flex-1 bg-blue-500 text-white py-2 sm:py-3 px-3 rounded-lg hover:bg-blue-600 transition-colors font-medium text-xs sm:text-sm text-center">
                                         ✎ Edit
                                     </a>
                                     <form action="delete.php" method="post" class="flex-1" onsubmit="return confirm('Delete this product?');">
                                         <input type="hidden" name="id" value="<?php echo $product['id']; ?>">
-                                        <button type="submit" class="w-full bg-red-500 text-white py-2 px-3 rounded-lg hover:bg-red-600 transition-colors font-medium text-sm">
+                                        <button type="submit" class="w-full bg-red-500 text-white py-2 sm:py-3 px-3 rounded-lg hover:bg-red-600 transition-colors font-medium text-xs sm:text-sm">
                                             🗑 Delete
                                         </button>
                                     </form>

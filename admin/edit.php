@@ -84,19 +84,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
 </head>
 
 <body class="bg-white text-black">
-    <header class="bg-gradient-to-r from-green-100 to-green-600 text-white p-4 flex items-center justify-between">
-        <h1 class="text-2xl font-bold">Edit Product</h1>
-        <a href="index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors">← Back</a>
+    <header class="bg-gradient-to-r from-green-100 to-green-600 text-white p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-2">
+        <h1 class="text-2xl sm:text-3xl font-bold">Edit Product</h1>
+        <a href="index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base whitespace-nowrap">← Back</a>
     </header>
 
-    <main class="container mx-auto px-4 py-10">
-        <div class="flex flex-col gap-2 mb-6">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div class="flex flex-col gap-2 mb-6 sm:gap-4">
             <span class="soft-badge">Update</span>
-            <h2 class="text-3xl font-bold">Edit Product Details</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold">Edit Product Details</h2>
         </div>
 
         <?php if ($error): ?>
-            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800 text-sm sm:text-base">
                 <p class="font-semibold">✕ <?php echo htmlspecialchars($error); ?></p>
             </div>
         <?php endif; ?>
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
                         <textarea class="form-input w-full" name="description" id="description" rows="5" required><?php echo htmlspecialchars($product['description']); ?></textarea>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label class="form-label" for="price">Price (LKR)</label>
                             <input class="form-input w-full" type="number" step="0.01" name="price" id="price" value="<?php echo htmlspecialchars($product['price']); ?>" required>
@@ -130,23 +130,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
                         <?php if (!empty($product['image'])): ?>
                             <div class="mb-4">
                                 <p class="text-sm text-gray-600 mb-2">Current Image:</p>
-                                <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'], '../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="rounded-lg max-w-xs border border-gray-200">
+                                <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'], '../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="rounded-lg max-w-xs border border-gray-200 w-full sm:w-80">
                             </div>
                         <?php endif; ?>
                         <div class="border-2 border-dashed border-green-300 rounded-lg p-6 text-center bg-green-50 cursor-pointer hover:border-green-500 transition-colors">
                             <input class="hidden" type="file" name="image" id="image" accept="image/png,image/jpeg,image/webp">
                             <label for="image" class="cursor-pointer block">
-                                <p class="text-gray-700 font-medium mb-1">📸 Click to upload or drag and drop</p>
-                                <p class="text-sm text-gray-600">Replace with new image (PNG, JPEG, or WebP)</p>
+                                <p class="text-gray-700 font-medium mb-1 text-sm sm:text-base">📸 Click to upload or drag and drop</p>
+                                <p class="text-xs sm:text-sm text-gray-600">Replace with new image (PNG, JPEG, or WebP)</p>
                             </label>
                         </div>
                     </div>
 
-                    <div class="flex gap-3 pt-4">
-                        <button type="submit" class="flex-1 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold">
+                    <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                        <button type="submit" class="flex-1 bg-green-500 text-white py-3 sm:py-4 rounded-lg hover:bg-green-600 transition-colors font-semibold text-base sm:text-lg">
                             ✓ Save Changes
                         </button>
-                        <a href="index.php" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg hover:bg-gray-300 transition-colors font-semibold text-center">
+                        <a href="index.php" class="flex-1 bg-gray-200 text-gray-800 py-3 sm:py-4 rounded-lg hover:bg-gray-300 transition-colors font-semibold text-base sm:text-lg text-center">
                             Cancel
                         </a>
                     </div>
