@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             if (updateUserContact((int)$userId, $newAddress, $newPhone)) {
                 $contactSuccess = 'Contact details updated.';
-                // refresh local copy
                 $user = getUserById((int)$userId);
             } else {
                 $contactError = 'Failed to update contact details.';
@@ -60,9 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (!empty($contactError ?? '')) {
-            // Stop here so the form can be corrected before placing the order.
         } else {
-            // Optionally update contact before placing the order if provided
             $postedAddress = trim($_POST['address'] ?? '');
             $postedPhone = trim($_POST['phone'] ?? '');
             if ($postedAddress !== '' && $postedPhone !== '') {
