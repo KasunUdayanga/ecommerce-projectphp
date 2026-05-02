@@ -37,7 +37,7 @@ $showSamples = false;
     <title>GreenStore</title>
     <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         .reveal-up {

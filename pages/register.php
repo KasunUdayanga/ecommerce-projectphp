@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Create Account</title>
     <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
     <style>
         .soft-badge {
             display: inline-flex;
