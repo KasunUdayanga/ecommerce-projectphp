@@ -4,11 +4,9 @@ require_once './includes/config.php';
 require_once './includes/functions.php';
 
 $products = fetchProducts(9);
-// Pick random 3 products for the homepage
 $featuredProducts = $products;
 shuffle($featuredProducts);
 $featuredProducts = array_slice($featuredProducts, 0, 3);
-
 $isLoggedIn = isUserLoggedIn();
 $userName = getLoggedInUserName();
 $redirectUrl = $_SERVER['REQUEST_URI'] ?? '/index.php';

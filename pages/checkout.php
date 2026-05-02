@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="radio" name="payment_method" value="card" class="mt-1">
                                 <span>
                                     <span class="block font-semibold">Card Payment</span>
-                                    <span class="block text-sm text-gray-600">One card option — you'll complete card payment after placing the order.</span>
+                                    <span class="block text-sm text-gray-600">you'll complete card payment after placing the order.</span>
                                 </span>
                             </label>
                             <label class="flex items-start gap-3 rounded-lg border border-gray-200 p-3 cursor-pointer hover:border-green-400 has-[:checked]:border-green-500 has-[:checked]:bg-green-50">
@@ -248,7 +248,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             </div>
 
-            <!-- Summary sidebar (desktop) -->
             <aside class="hidden lg:block">
                 <div class="sticky top-6 p-5 rounded-lg border border-gray-200 bg-white shadow-sm">
                     <h4 class="text-lg font-semibold mb-3">Your Order</h4>
@@ -271,7 +270,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <?php require_once __DIR__ . '/../includes/layout/footer.php'; ?>
     <script>
-        // Enable/disable Place Order based on contact fields
         (function() {
             const form = document.getElementById('checkoutForm');
             if (!form) return;
@@ -332,7 +330,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             phone && phone.addEventListener('input', validate);
             bankReceiptInput && bankReceiptInput.addEventListener('change', validate);
             paymentMethods.forEach((method) => method.addEventListener('change', updatePaymentUI));
-            // initial
             validate();
             updatePaymentUI();
         })();
