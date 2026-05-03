@@ -182,7 +182,7 @@ function calculateTotalPrice($cartItems)
         <?php if (empty($cartItems)): ?>
             <div class="cart-shell text-center py-12">
                 <p class="text-xl text-gray-600 mb-4">Your cart is currently empty</p>
-                <a href="<?php echo htmlspecialchars($homeUrl); ?>" class="inline-flex bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition-colors">
+                <a href="<?php echo htmlspecialchars($homeUrl); ?>" class="inline-flex bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-100 transition-colors">
                     Continue Shopping
                 </a>
             </div>

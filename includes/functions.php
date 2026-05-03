@@ -854,6 +854,32 @@ function getAdminOrders()
     if ($result) {
         $orders = $result->fetch_all(MYSQLI_ASSOC);
     }
+
+    // Attach order items for each order (product name, quantity, price)
+    if (!empty($orders)) {
+        foreach ($orders as &$order) {
+            $orderId = (int) $order['id'];
+            $items = [];
+            try {
+                $stmt = $conn->prepare("SELECT oi.quantity, oi.price, p.name as product_name FROM order_items oi LEFT JOIN products p ON p.id = oi.product_id WHERE oi.order_id = ?");
+                if ($stmt) {
+                    $stmt->bind_param("i", $orderId);
+                    $stmt->execute();
+                    $res = $stmt->get_result();
+                    if ($res) {
+                        $items = $res->fetch_all(MYSQLI_ASSOC);
+                    }
+                    $stmt->close();
+                }
+            } catch (Throwable $e) {
+                // ignore and continue
+            }
+
+            $order['items'] = $items;
+        }
+        unset($order);
+    }
+
     $conn->close();
     return $orders;
 }

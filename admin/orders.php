@@ -98,29 +98,50 @@ $orders = getAdminOrders();
         <?php else: ?>
             <!-- Desktop Table View (hidden on mobile) -->
             <div class="admin-shell overflow-x-auto hidden md:block">
-                <table class="min-w-full border-collapse">
+                <table class="min-w-full bg-white rounded-lg shadow-sm divide-y divide-gray-100">
                     <thead>
-                        <tr class="border-b border-gray-200 text-left text-sm text-gray-600">
-                            <th class="py-4 px-4 font-semibold">Order</th>
-                            <th class="py-4 px-4 font-semibold">Customer</th>
-                            <th class="py-4 px-4 font-semibold">Shipping Details</th>
-                            <th class="py-4 px-4 font-semibold">Totals</th>
-                            <th class="py-4 px-4 font-semibold">Status</th>
-                            <th class="py-4 px-4 font-semibold">Created</th>
-                            <th class="py-4 px-4 font-semibold">Action</th>
+                        <tr class="text-left text-sm text-gray-600">
+                            <th class="py-3 px-4 font-semibold">#</th>
+                            <th class="py-3 px-4 font-semibold">Customer</th>
+                            <th class="py-3 px-4 font-semibold">Shipping</th>
+                            <th class="py-3 px-4 font-semibold">Details</th>
+                            <th class="py-3 px-4 font-semibold">Totals</th>
+                            <th class="py-3 px-4 font-semibold">Status</th>
+                            <th class="py-3 px-4 font-semibold">Created</th>
+                            <th class="py-3 px-4 font-semibold">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-sm text-gray-700">
                         <?php foreach ($orders as $order): ?>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors align-top">
+                            <tr class="odd:bg-white even:bg-green-50 hover:bg-green-100 transition-colors align-top">
                                 <td class="py-4 px-4 font-semibold text-gray-800">#<?php echo htmlspecialchars((string) $order['id']); ?></td>
                                 <td class="py-4 px-4">
-                                    <p class="font-semibold text-gray-800 text-sm"><?php echo htmlspecialchars($order['username']); ?></p>
+                                    <p class="font-semibold text-gray-800"><?php echo htmlspecialchars($order['username']); ?></p>
                                     <p class="text-xs text-gray-500"><?php echo htmlspecialchars($order['email']); ?></p>
                                 </td>
                                 <td class="py-4 px-4 text-sm text-gray-700">
-                                    <p><span class="font-semibold">Address:</span> <?php echo htmlspecialchars($order['address'] ?: 'N/A'); ?></p>
+                                    <p><span class="font-semibold">Addr:</span> <?php echo htmlspecialchars($order['address'] ?: 'N/A'); ?></p>
                                     <p><span class="font-semibold">Phone:</span> <?php echo htmlspecialchars($order['phone_number'] ?: 'N/A'); ?></p>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <details class="group">
+                                        <summary class="cursor-pointer select-none text-sm text-green-700 font-medium">View details</summary>
+                                        <div class="mt-2 text-sm text-gray-700">
+                                            <?php if (!empty($order['items']) && is_array($order['items'])): ?>
+                                                <ul class="list-inside list-disc">
+                                                    <?php foreach ($order['items'] as $it): ?>
+                                                        <li><?php echo htmlspecialchars($it['product_name'] ?? 'Product'); ?> × <?php echo (int) $it['quantity']; ?> — LKR <?php echo number_format((float) $it['price'], 2); ?></li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            <?php else: ?>
+                                                <p class="text-xs text-gray-500">No items found</p>
+                                            <?php endif; ?>
+                                            <div class="mt-3">
+                                                <p class="font-semibold text-sm"><?php echo htmlspecialchars(ucfirst($order['payment_method'] ?? '')); ?></p>
+                                                <p class="text-xs text-gray-500"><?php echo htmlspecialchars($order['payment_status'] ?? ''); ?></p>
+                                            </div>
+                                        </div>
+                                    </details>
                                 </td>
                                 <td class="py-4 px-4 text-sm text-gray-700">
                                     <p>Subtotal: <span class="font-semibold">LKR <?php echo number_format((float) $order['total_price'], 2); ?></span></p>
@@ -141,7 +162,7 @@ $orders = getAdminOrders();
                                         <form method="POST" class="inline">
                                             <input type="hidden" name="action" value="confirm_order">
                                             <input type="hidden" name="order_id" value="<?php echo (int) $order['id']; ?>">
-                                            <button type="submit" class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 transition-colors">
+                                            <button type="submit" class="rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-700 transition-colors">
                                                 Confirm
                                             </button>
                                         </form>
@@ -184,6 +205,27 @@ $orders = getAdminOrders();
                                 <p><span class="font-semibold">Address:</span> <span class="break-words"><?php echo htmlspecialchars($order['address'] ?: 'N/A'); ?></span></p>
                                 <p><span class="font-semibold">Phone:</span> <?php echo htmlspecialchars($order['phone_number'] ?: 'N/A'); ?></p>
                             </div>
+                        </div>
+
+                        <!-- Items -->
+                        <div class="mb-4">
+                            <p class="text-xs uppercase text-gray-500 font-semibold mb-2">Items</p>
+                            <?php if (!empty($order['items']) && is_array($order['items'])): ?>
+                                <ul class="list-inside list-disc text-sm text-gray-700">
+                                    <?php foreach ($order['items'] as $it): ?>
+                                        <li><?php echo htmlspecialchars($it['product_name'] ?? 'Product'); ?> × <?php echo (int) $it['quantity']; ?> — LKR <?php echo number_format((float) $it['price'], 2); ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php else: ?>
+                                <p class="text-sm text-gray-500">No items found</p>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Payment -->
+                        <div class="mb-4">
+                            <p class="text-xs uppercase text-gray-500 font-semibold mb-2">Payment</p>
+                            <p class="font-semibold text-sm text-gray-800"><?php echo htmlspecialchars(ucfirst($order['payment_method'] ?? '')); ?></p>
+                            <p class="text-xs text-gray-500"><?php echo htmlspecialchars($order['payment_status'] ?? ''); ?></p>
                         </div>
 
                         <!-- Totals -->
