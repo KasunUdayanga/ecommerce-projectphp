@@ -91,7 +91,7 @@ if (!isset($_GET['code'])) {
 
                         // determine redirect
                         $statePayload = @json_decode(base64_decode($state), true);
-                        $redirectTarget = $statePayload['redirect'] ?? 'index.php';
+                        $redirectTarget = $statePayload['redirect'] ?? '/ecommerce-projectphp/user-site/index.php';
                         // Clean up
                         unset($_SESSION['google_oauth_state']);
 

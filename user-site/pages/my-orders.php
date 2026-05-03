@@ -130,7 +130,7 @@ $appBase = '/ecommerce-projectphp/user-site/';
                 <h2 class="mt-2 text-3xl sm:text-4xl font-bold">My Orders</h2>
                 <p class="text-sm text-gray-600 mt-2">Track your orders and delivery status</p>
             </div>
-            <a href="<?php echo htmlspecialchars($appBase . 'index.php'); ?>" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">
+            <a href="products.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">
                 Continue Shopping
             </a>
         </div>

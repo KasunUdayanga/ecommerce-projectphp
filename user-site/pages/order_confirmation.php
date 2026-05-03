@@ -156,7 +156,7 @@ if (!empty($order['created_at'])) {
                         <p class="text-xs text-gray-500 mt-1">Status: <?php echo htmlspecialchars($paymentStatus); ?></p>
                     </div>
                     <div class="mt-4">
-                        <a href="../index.php" class="block text-center bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Continue Shopping</a>
+                        <a href="products.php" class="block text-center bg-green-500 text-white px-4 py-2 rounded hover:bg-green-100">Continue Shopping</a>
                     </div>
                 </div>
             </aside>

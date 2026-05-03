@@ -83,7 +83,7 @@ if ($searchQuery !== '') {
     <header class="bg-gradient-to-r from-green-100 to-green-600 text-white p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-2">
         <h1 class="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-            <a href="/ecommerce-projectphp/user-site/index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">View Store</a>
+            <a href="/ecommerce-projectphp/user-site/pages/products.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">View Store</a>
             <a href="/ecommerce-projectphp/admin-site/admin/orders.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">Orders</a>
             <a href="/ecommerce-projectphp/admin-site/admin/create.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">Add Product</a>
             <a href="/ecommerce-projectphp/admin-site/admin/logout.php" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-100 font-medium transition-colors text-sm sm:text-base">Logout</a>
