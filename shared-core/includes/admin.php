@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/functions.php';
 
 function getAdminConfig()
 {
     global $db_config;
     if (!isset($db_config) || !is_array($db_config)) {
-        $db_config = require_once __DIR__ . '/config.php';
+        $db_config = require_once __DIR__ . '/../config.php';
     }
 
     return is_array($db_config) ? $db_config : [];

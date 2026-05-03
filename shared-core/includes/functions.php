@@ -38,7 +38,7 @@ function getDbConnection()
 {
     global $db_config;
     if (!isset($db_config) || !is_array($db_config)) {
-        $db_config = require_once __DIR__ . '/config.php';
+        $db_config = require_once __DIR__ . '/../config.php';
     }
 
     $config = is_array($db_config) ? $db_config : [];
