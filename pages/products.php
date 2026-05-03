@@ -61,6 +61,15 @@ $logoutUrl = 'logout.php';
                     <p class="text-gray-600">No products matched your search.</p>
                 <?php endif; ?>
                 <?php foreach ($products as $product): ?>
+                    <?php
+                    $descriptionText = trim((string) ($product['description'] ?? ''));
+                    $descriptionWords = preg_split('/\s+/', $descriptionText, -1, PREG_SPLIT_NO_EMPTY);
+                    $descriptionPreview = $descriptionText;
+                    if (is_array($descriptionWords) && count($descriptionWords) > 20) {
+                        $descriptionPreview = implode(' ', array_slice($descriptionWords, 0, 20)) . '...';
+                    }
+                    $stock = isset($product['stock']) ? (int) $product['stock'] : 0;
+                    ?>
                     <div class="border border-gray-200 bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
                         <div class="product-media">
                             <?php if (!empty($product['image'])): ?>
@@ -70,8 +79,9 @@ $logoutUrl = 'logout.php';
                             <?php endif; ?>
                         </div>
                         <h3 class="text-xl font-bold mt-4"><?php echo htmlspecialchars($product['name']); ?></h3>
-                        <p class="text-sm text-gray-600 mt-2"><?php echo htmlspecialchars($product['description']); ?></p>
+                        <p class="text-sm text-gray-600 mt-2"><?php echo htmlspecialchars($descriptionPreview); ?></p>
                         <p class="text-green-600 mt-4 font-semibold">LKR <?php echo number_format($product['price'], 2); ?></p>
+                        <p class="text-sm text-gray-700 mt-2"><?php echo $stock > 0 ? $stock . ' in stock' : 'Out of stock'; ?></p>
                         <div class="mt-4 flex flex-wrap gap-2">
                             <a href="product.php?id=<?php echo $product['id']; ?>" class="bg-green-500 text-white hover:text-white py-2 px-4 rounded-lg hover:bg-green-600">
                                 View Product

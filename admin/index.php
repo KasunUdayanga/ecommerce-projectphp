@@ -3,8 +3,14 @@ require_once __DIR__ . '/../includes/admin.php';
 
 requireAdminLogin();
 
-$products = getAllProducts();
+$searchQuery = trim($_GET['q'] ?? '');
 $message = $_GET['message'] ?? '';
+
+if ($searchQuery !== '') {
+    $products = searchProductsByName($searchQuery, 200);
+} else {
+    $products = getAllProducts();
+}
 ?>
 
 <!DOCTYPE html>
@@ -90,9 +96,18 @@ $message = $_GET['message'] ?? '';
                 <span class="soft-badge">Inventory</span>
                 <h2 class="mt-2 text-3xl sm:text-4xl font-bold">Products Management</h2>
             </div>
-            <a href="orders.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">
-                Open Order Confirmations
-            </a>
+            <div class="flex items-center gap-3">
+                <form method="GET" action="index.php" class="flex items-center gap-2">
+                    <input type="text" name="q" value="<?php echo htmlspecialchars($searchQuery ?? ''); ?>" placeholder="Search products by name or id" class="rounded-lg border border-gray-300 px-4 py-3 text-sm text-sm focus:border-green-500 focus:outline-none">
+                    <button type="submit" class="justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">Search</button>
+                </form>
+                <?php if (!empty($searchQuery)): ?>
+                    <a href="index.php" class="text-sm text-gray-600 hover:underline">Clear</a>
+                <?php endif; ?>
+                <a href="orders.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">
+                    Open Order Confirmations
+                </a>
+            </div>
         </div>
 
         <?php if ($message): ?>
@@ -136,7 +151,7 @@ $message = $_GET['message'] ?? '';
                                 </div>
 
                                 <div class="mt-4 pt-4 border-t border-gray-200 flex flex-col sm:flex-row gap-2">
-                                    <a href="edit.php?id=<?php echo $product['id']; ?>" class="flex-1 bg-blue-500 text-white py-2 sm:py-3 px-3 rounded-lg hover:bg-blue-600 transition-colors font-medium text-xs sm:text-sm text-center">
+                                    <a href="edit.php?id=<?php echo $product['id']; ?>" class="flex-1 bg-blue-500 text-white py-2 sm:py-3 px-3 rounded-lg hover:bg-blue-100 transition-colors font-medium text-xs sm:text-sm text-center">
                                         ✎ Edit
                                     </a>
                                     <form action="delete.php" method="post" class="flex-1" onsubmit="return confirm('Delete this product?');">

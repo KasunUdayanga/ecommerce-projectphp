@@ -188,7 +188,6 @@ function calculateTotalPrice($cartItems)
             </div>
         <?php else: ?>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Cart Items Grid -->
                 <div class="lg:col-span-2">
                     <div class="cart-shell">
                         <div class="grid grid-cols-1 gap-6">
@@ -224,8 +223,6 @@ function calculateTotalPrice($cartItems)
                         </div>
                     </div>
                 </div>
-
-                <!-- Order Summary -->
                 <div class="lg:col-span-1">
                     <div class="cart-summary sticky top-4">
                         <h2 class="text-xl font-bold text-gray-800 mb-4">Order Summary</h2>

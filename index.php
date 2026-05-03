@@ -215,6 +215,14 @@ $showSamples = false;
                     <p class="text-gray-600">No products available yet.</p>
                 <?php else: ?>
                     <?php foreach ($featuredProducts as $product): ?>
+                        <?php
+                        $descriptionText = trim((string) ($product['description'] ?? ''));
+                        $descriptionWords = preg_split('/\s+/', $descriptionText, -1, PREG_SPLIT_NO_EMPTY);
+                        $descriptionPreview = $descriptionText;
+                        if (is_array($descriptionWords) && count($descriptionWords) > 20) {
+                            $descriptionPreview = implode(' ', array_slice($descriptionWords, 0, 20)) . '...';
+                        }
+                        ?>
                         <div class="featured-card p-4">
                             <div class="featured-image">
                                 <?php if (!empty($product['image'])): ?>
@@ -224,7 +232,7 @@ $showSamples = false;
                                 <?php endif; ?>
                             </div>
                             <h3 class="font-bold mt-4 text-lg"><?php echo htmlspecialchars($product['name']); ?></h3>
-                            <p class="featured-description mt-2 text-sm text-gray-600"><?php echo htmlspecialchars($product['description']); ?></p>
+                            <p class="featured-description mt-2 text-sm text-gray-600"><?php echo htmlspecialchars($descriptionPreview); ?></p>
                             <div class="mt-4 flex items-center justify-between">
                                 <p class="text-lg font-semibold text-green-600">LKR <?php echo number_format($product['price'], 2); ?></p>
                                 <span class="text-xs text-gray-500">In stock</span>

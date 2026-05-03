@@ -24,6 +24,14 @@ if (!$product) {
     echo "Product not found.";
     exit;
 }
+
+$descriptionText = trim((string) ($product['description'] ?? ''));
+$descriptionWords = preg_split('/\s+/', $descriptionText, -1, PREG_SPLIT_NO_EMPTY);
+$descriptionPreview = $descriptionText;
+if (is_array($descriptionWords) && count($descriptionWords) > 20) {
+    $descriptionPreview = implode(' ', array_slice($descriptionWords, 0, 20)) . '...';
+}
+$stock = isset($product['stock']) ? (int) $product['stock'] : 0;
 ?>
 
 <!DOCTYPE html>
@@ -54,8 +62,9 @@ if (!$product) {
             </div>
             <div>
                 <h1 class="text-3xl font-bold mb-2"><?php echo htmlspecialchars($product['name']); ?></h1>
-                <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($product['description']); ?></p>
-                <p class="text-2xl font-semibold text-green-600 mb-6">LKR<?php echo number_format($product['price'], 2); ?></p>
+                <p class="text-gray-600 mb-2"><?php echo htmlspecialchars($descriptionPreview); ?></p>
+                <p class="text-2xl font-semibold text-green-600 mb-2">LKR<?php echo number_format($product['price'], 2); ?></p>
+                <p class="text-sm text-gray-700 mb-6"><?php echo $stock > 0 ? $stock . ' in stock' : 'Out of stock'; ?></p>
                 <form action="cart.php" method="post" class="flex flex-wrap gap-3">
                     <input type="hidden" name="action" value="add">
                     <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
