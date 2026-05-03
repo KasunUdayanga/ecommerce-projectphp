@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../shared-core/config.php';
+require_once __DIR__ . '/../../shared-core/includes/functions.php';
 
 $searchQuery = trim($_GET['q'] ?? '');
 $products = $searchQuery !== '' ? searchProductsByName($searchQuery, 200) : fetchProducts(200);
@@ -12,7 +12,7 @@ $brandName = 'Green Store';
 $tagline = 'Fresh finds delivered to your door.';
 $homeUrl = 'index.php';
 $cartUrl = 'cart.php';
-$adminUrl = '../admin/login.php';
+$adminUrl = '/ecommerce-projectphp/admin-site/index.php';
 $loginUrl = 'login.php?redirect=' . urlencode($redirectUrl);
 $logoutUrl = 'logout.php';
 ?>
@@ -23,15 +23,15 @@ $logoutUrl = 'logout.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($brandName); ?> - All Products</title>
-    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
+    <link rel="icon" href="/ecommerce-projectphp/shared-core/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="/ecommerce-projectphp/assets/css/styles.css" rel="stylesheet">
+    <link href="/ecommerce-projectphp/shared-core/assets/css/styles.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="bg-white text-black font-poppins">
     <div class="page-container">
-        <?php include __DIR__ . '/../includes/layout/header.php'; ?>
+        <?php include __DIR__ . '/../../shared-core/includes/layout/header.php'; ?>
 
         <main class="content container mx-auto px-4 py-10">
             <div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
@@ -73,9 +73,9 @@ $logoutUrl = 'logout.php';
                     <div class="border border-gray-200 bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
                         <div class="product-media">
                             <?php if (!empty($product['image'])): ?>
-                                <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'], '../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="w-full h-48 object-cover rounded-lg">
+                                <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'])); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="w-full h-48 object-cover rounded-lg">
                             <?php else: ?>
-                                <img src="../assets/images/placeholder.png" alt="No images available" class="w-full h-48 object-cover rounded-lg">
+                                <img src="/ecommerce-projectphp/shared-core/assets/placeholder.png" alt="Product placeholder" class="w-full h-48 object-cover rounded-lg">
                             <?php endif; ?>
                         </div>
                         <h3 class="text-xl font-bold mt-4"><?php echo htmlspecialchars($product['name']); ?></h3>
@@ -102,7 +102,7 @@ $logoutUrl = 'logout.php';
             </div>
         </main>
 
-        <?php include __DIR__ . '/../includes/layout/footer.php'; ?>
+        <?php include __DIR__ . '/../../shared-core/includes/layout/footer.php'; ?>
     </div>
 
     <?php if (!$isLoggedIn): ?>

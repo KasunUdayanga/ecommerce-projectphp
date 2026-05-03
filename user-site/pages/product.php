@@ -1,6 +1,6 @@
 <?php
-require_once '../includes/config.php';
-require_once '../includes/functions.php';
+require_once __DIR__ . '/../../shared-core/config.php';
+require_once __DIR__ . '/../../shared-core/includes/functions.php';
 
 // Fetch product ID from URL
 $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -15,7 +15,7 @@ $brandName = 'Green Store';
 $tagline = 'Fresh finds delivered to your door.';
 $homeUrl = 'index.php';
 $cartUrl = 'cart.php';
-$adminUrl = '../admin/login.php';
+$adminUrl = '/ecommerce-projectphp/admin-site/index.php';
 $loginUrl = 'login.php?redirect=' . urlencode($redirectUrl);
 $logoutUrl = 'logout.php';
 $showHero = false;
@@ -41,20 +41,20 @@ $stock = isset($product['stock']) ? (int) $product['stock'] : 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="/ecommerce-projectphp/assets/css/styles.css" rel="stylesheet">
+    <link href="/ecommerce-projectphp/shared-core/assets/css/styles.css" rel="stylesheet">
     <title><?php echo htmlspecialchars($product['name']); ?></title>
-    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
+    <link rel="icon" href="/ecommerce-projectphp/shared-core/assets/titlelog.png" type="image/png">
 </head>
 
 <body class="bg-white text-black">
-    <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/header.php'; ?>
     <div class="container mx-auto p-6">
         <a href="../index.php" class="text-sm text-green-600 hover:text-green-700">← Back to Products</a>
         <div class="mt-4 grid gap-8 lg:grid-cols-2">
             <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
                 <div class="product-media">
                     <?php if (!empty($product['image'])): ?>
-                        <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'], '../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'])); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                     <?php else: ?>
                         <span>Product Image</span>
                     <?php endif; ?>
@@ -80,7 +80,7 @@ $stock = isset($product['stock']) ? (int) $product['stock'] : 0;
         </div>
     </div>
 
-    <?php require_once __DIR__ . '/../includes/layout/footer.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/footer.php'; ?>
 
     <?php if (!$isLoggedIn): ?>
         <div id="login-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">

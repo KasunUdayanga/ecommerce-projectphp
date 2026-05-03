@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../includes/admin.php';
+require_once __DIR__ . '/../../shared-core/includes/admin.php';
 
 if (isAdminLoggedIn()) {
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
     if (attemptAdminLogin($username, $password)) {
-        header('Location: index.php');
+        header('Location: ../index.php');
         exit;
     }
     $error = 'Invalid username or password.';
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/shared-core/assets/css/styles.css">
     <style>
         .form-input {
             border: 1px solid #e5e7eb;
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Footer -->
             <div class="text-center mt-6">
                 <p class="text-sm text-gray-600">
-                    <a href="../index.php" class="text-green-600 hover:text-green-700 font-semibold">← Back to Store</a>
+                    <a href=" /ecommerce-projectphp/user-site/index.php" class="text-green-600 hover:text-green-700 font-semibold">← Back to Store</a>
                 </p>
             </div>
         </div>

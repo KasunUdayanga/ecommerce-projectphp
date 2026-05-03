@@ -8,7 +8,7 @@ $footerText = $footerText ?? ('© ' . date('Y') . ' Green Store. All rights rese
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 items-center">
             <!-- Logo Section -->
             <div class="flex items-center justify-center md:justify-start">
-                <img src="/ecommerce-projectphp/assets/logo.png" alt="Logo" class="h-8 md:h-10 w-auto">
+                <img src="/ecommerce-projectphp/shared-core/assets/logo.png" alt="Logo" class="h-8 md:h-10 w-auto">
             </div>
 
             <!-- Copyright Text -->

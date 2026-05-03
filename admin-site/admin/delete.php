@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/admin.php';
+require_once __DIR__ . '/../../shared-core/includes/admin.php';
 
 requireAdminLogin();
 
@@ -10,5 +10,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-header('Location: index.php?message=Product%20deleted');
+header('Location: /ecommerce-projectphp/admin-site/index.php?message=Product%20deleted');
 exit;

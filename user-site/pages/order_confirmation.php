@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../shared-core/includes/functions.php';
 
 if (!isUserLoggedIn()) {
     header('Location: login.php');
@@ -63,8 +63,9 @@ if (!empty($order['created_at'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation</title>
-    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
+    <link rel="icon" href="/ecommerce-projectphp/shared-core/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/ecommerce-projectphp/shared-core/assets/css/styles.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100 text-gray-800">

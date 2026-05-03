@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/functions.php';
+require_once __DIR__ . '/../../shared-core/includes/functions.php';
 
 if (isUserLoggedIn()) {
     $redirect = $_GET['redirect'] ?? 'index.php';
@@ -16,7 +16,7 @@ $brandName = 'Green Store';
 $tagline = 'Fresh finds delivered to your door.';
 $homeUrl = 'index.php';
 $cartUrl = 'cart.php';
-$adminUrl = '../admin/login.php';
+$adminUrl = '/ecommerce-projectphp/admin-site/index.php';
 $loginUrl = 'login.php?redirect=' . urlencode($redirect);
 $logoutUrl = 'logout.php';
 $showHero = false;
@@ -44,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
+    <link rel="icon" href="/ecommerce-projectphp/shared-core/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/shared-core/assets/css/styles.css">
     <style>
         .soft-badge {
             display: inline-flex;
@@ -182,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="bg-white text-black">
-    <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/header.php'; ?>
     <main class="relative flex-1 flex items-center justify-center p-4 py-8">
         <div class="herb-bg" aria-hidden="true">
             <span class="herb-orb" style="top:12%; left:18%;">🌿</span>
@@ -239,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </main>
-    <?php require_once __DIR__ . '/../includes/layout/footer.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/footer.php'; ?>
 </body>
 
 </html>

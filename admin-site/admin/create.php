@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/admin.php';
+require_once __DIR__ . '/../../shared-core/includes/admin.php';
 
 requireAdminLogin();
 
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Name and description are required.';
     } else {
         if (createProduct($name, $description, $price, $stock, $imagePath)) {
-            header('Location: index.php?message=Product%20created');
+            header('Location: /ecommerce-projectphp/admin-site/index.php?message=Product%20created');
             exit;
         }
         $error = 'Could not create product.';
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/shared-core/assets/css/styles.css">
     <style>
         .soft-badge {
             display: inline-flex;
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="bg-white text-black">
     <header class="bg-gradient-to-r from-green-100 to-green-600 text-white p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-2">
         <h1 class="text-2xl sm:text-3xl font-bold">Add New Product</h1>
-        <a href="index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base whitespace-nowrap">← Back</a>
+        <a href="/ecommerce-projectphp/admin-site/index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base whitespace-nowrap">← Back</a>
     </header>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="submit" class="flex-1 bg-green-500 text-white py-3 sm:py-4 rounded-lg hover:bg-green-600 transition-colors font-semibold text-base sm:text-lg">
                         ✓ Create Product
                     </button>
-                    <a href="index.php" class="flex-1 bg-gray-200 text-gray-800 py-3 sm:py-4 rounded-lg hover:bg-gray-300 transition-colors font-semibold text-base sm:text-lg text-center">
+                    <a href="/ecommerce-projectphp/admin-site/index.php" class="flex-1 bg-gray-200 text-gray-800 py-3 sm:py-4 rounded-lg hover:bg-gray-300 transition-colors font-semibold text-base sm:text-lg text-center">
                         Cancel
                     </a>
                 </div>

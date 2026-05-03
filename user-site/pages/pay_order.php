@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../shared-core/includes/functions.php';
 
 if (!isUserLoggedIn()) {
     header('Location: login.php');
@@ -48,11 +48,12 @@ $conn->close();
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Pay Order</title>
-    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
+    <link rel="icon" href="/ecommerce-projectphp/shared-core/assets/titlelog.png" type="image/png">
+    <link href="/ecommerce-projectphp/shared-core/assets/css/styles.css" rel="stylesheet">
 </head>
 
 <body class="bg-white text-black">
-    <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/header.php'; ?>
 
     <div class="container mx-auto p-4">
         <div class="max-w-xl mx-auto bg-white border rounded-lg p-6">
@@ -89,7 +90,7 @@ $conn->close();
         </div>
     </div>
 
-    <?php require_once __DIR__ . '/../includes/layout/footer.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/footer.php'; ?>
 </body>
 
 </html>

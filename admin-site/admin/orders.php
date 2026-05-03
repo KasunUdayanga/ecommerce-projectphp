@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/admin.php';
+require_once __DIR__ . '/../../shared-core/includes/admin.php';
 
 requireAdminLogin();
 
@@ -38,7 +38,7 @@ $orders = getAdminOrders();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Orders</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/shared-core/assets/css/styles.css">
     <style>
         .soft-badge {
             display: inline-flex;
@@ -66,8 +66,8 @@ $orders = getAdminOrders();
     <header class="bg-gradient-to-r from-green-100 to-green-600 text-white p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-2">
         <h1 class="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-            <a href="index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">Products</a>
-            <a href="../pages/products.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">View Store</a>
+            <a href="/ecommerce-projectphp/admin-site/index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">Products</a>
+            <a href="/ecommerce-projectphp/user-site/index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">View Store</a>
             <a href="create.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base">Add Product</a>
             <a href="logout.php" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-100 font-medium transition-colors text-sm sm:text-base">Logout</a>
         </div>
@@ -80,7 +80,7 @@ $orders = getAdminOrders();
                 <h2 class="mt-2 text-3xl sm:text-4xl font-bold">Order Confirmations</h2>
                 <p class="text-sm text-gray-600 mt-2">Review shipping details and confirm orders for dispatch.</p>
             </div>
-            <a href="index.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">
+            <a href="/ecommerce-projectphp/admin-site/index.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">
                 Back to Products
             </a>
         </div>

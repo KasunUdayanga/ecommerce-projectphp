@@ -3,11 +3,11 @@ $brandName = $brandName ?? 'Green Store';
 $tagline = $tagline ?? 'Fresh finds delivered to your door.';
 
 // Auto base path: if current script is under /pages/, go up one level
-$appBase = $appBase ?? '/ecommerce-projectphp/';
+$appBase = $appBase ?? '/ecommerce-projectphp/user-site/';
 $homeUrl = ($appBase . 'index.php');
 $cartUrl = $cartUrl ?? ($appBase . 'pages/cart.php');
 $myOrdersUrl = $myOrdersUrl ?? ($appBase . 'pages/my-orders.php');
-$adminUrl = $adminUrl ?? ($appBase . 'admin/login.php');
+$adminUrl = $adminUrl ?? '/ecommerce-projectphp/admin-site/index.php';
 $loginUrl = $loginUrl ?? ($appBase . 'pages/login.php');
 $logoutUrl = $logoutUrl ?? ($appBase . 'pages/logout.php');
 $registerUrl = $registerUrl ?? ($appBase . 'pages/register.php');
@@ -44,13 +44,13 @@ function isActive($navUrl, $currentPath): string
 }
 ?>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
+<link rel="stylesheet" href="/ecommerce-projectphp/shared-core/assets/css/styles.css">
 
 <header class="bg-green-500 text-white py-4">
     <div class="container mx-auto px-4 md:flex md:items-center md:justify-between">
         <div class="flex w-full items-center justify-between gap-3 md:w-auto">
             <div class="flex items-center">
-                <img src="/ecommerce-projectphp/assets/logo.png" alt="Logo" class="h-10 w-30 rounded-full mr-3">
+                <img src="/ecommerce-projectphp/shared-core/assets/logo.png" alt="Logo" class="h-10 w-30 rounded-full mr-3">
             </div>
             <button type="button" id="mobile-nav-toggle" class="inline-flex items-center justify-center rounded-lg border border-white/40 px-3 py-2 text-sm font-semibold text-white hover:bg-white/10 md:hidden" aria-controls="site-nav" aria-expanded="false">
                 Menu
@@ -90,7 +90,7 @@ function isActive($navUrl, $currentPath): string
                     </div>
                 </div>
                 <div class="flex-shrink-0 hidden md:flex items-center justify-center">
-                    <img src="/ecommerce-projectphp/assets/titlelog.png" alt="Store Logo" class="h-32 md:h-40 drop-shadow-lg" />
+                    <img src="/ecommerce-projectphp/shared-core/assets/titlelog.png" alt="Store Logo" class="h-32 md:h-40 drop-shadow-lg" />
                 </div>
             </div>
         </div>

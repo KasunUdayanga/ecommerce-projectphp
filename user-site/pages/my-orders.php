@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../shared-core/config.php';
+require_once __DIR__ . '/../../shared-core/includes/functions.php';
 
 // Check if user is logged in
 if (!isUserLoggedIn()) {
@@ -13,7 +13,7 @@ $userId = $_SESSION['user_id'];
 $orders = getUserOrders($userId);
 $userName = getLoggedInUserName();
 $isLoggedIn = true;
-$appBase = '/ecommerce-projectphp/';
+$appBase = '/ecommerce-projectphp/user-site/';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +23,7 @@ $appBase = '/ecommerce-projectphp/';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/shared-core/assets/css/styles.css">
     <style>
         .soft-badge {
             display: inline-flex;
@@ -121,7 +121,7 @@ $appBase = '/ecommerce-projectphp/';
 </head>
 
 <body class="bg-gray-50 text-black">
-    <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/header.php'; ?>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div class="flex flex-col gap-4 mb-8 md:flex-row md:items-center md:justify-between">
@@ -252,7 +252,7 @@ $appBase = '/ecommerce-projectphp/';
         <?php endif; ?>
     </main>
 
-    <?php require_once __DIR__ . '/../includes/layout/footer.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/footer.php'; ?>
 </body>
 
 </html>

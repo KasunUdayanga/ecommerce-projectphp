@@ -551,7 +551,7 @@ function storeOriginalProductImage($file, $existingPath, $mime)
     return 'uploads/products/' . $fileName;
 }
 
-function getProductImageUrl($path, $prefix = '')
+function getProductImageUrl($path, $prefix = '/ecommerce-projectphp/shared-core/')
 {
     if (!$path) {
         return '';

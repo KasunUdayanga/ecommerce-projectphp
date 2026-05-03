@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../shared-core/includes/functions.php';
 
 if (!isUserLoggedIn()) {
     header('Location: login.php');
@@ -104,13 +104,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="/ecommerce-projectphp/assets/css/styles.css" rel="stylesheet">
+    <link href="/ecommerce-projectphp/shared-core/assets/css/styles.css" rel="stylesheet">
     <title>Checkout</title>
-    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
+    <link rel="icon" href="/ecommerce-projectphp/shared-core/assets/titlelog.png" type="image/png">
 </head>
 
 <body class="bg-white text-black">
-    <?php require_once __DIR__ . '/../includes/layout/header.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/header.php'; ?>
     <?php
     // load user contact info
     $user = getUserById((int)$userId);
@@ -265,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </aside>
         </div>
     </div>
-    <?php require_once __DIR__ . '/../includes/layout/footer.php'; ?>
+    <?php require_once __DIR__ . '/../../shared-core/includes/layout/footer.php'; ?>
     <script>
         (function() {
             const form = document.getElementById('checkoutForm');

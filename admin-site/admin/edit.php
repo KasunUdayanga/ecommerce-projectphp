@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/admin.php';
+require_once __DIR__ . '/../../shared-core/includes/admin.php';
 
 requireAdminLogin();
 
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
         $error = 'Name and description are required.';
     } else {
         if (updateProduct($product['id'], $name, $description, $price, $stock, $imagePath)) {
-            header('Location: index.php?message=Product%20updated');
+            header('Location: /ecommerce-projectphp/admin-site/index.php?message=Product%20updated');
             exit;
         }
         $error = 'Could not update product.';
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/shared-core/assets/css/styles.css">
     <style>
         .soft-badge {
             display: inline-flex;
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
 <body class="bg-white text-black">
     <header class="bg-gradient-to-r from-green-100 to-green-600 text-white p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-2">
         <h1 class="text-2xl sm:text-3xl font-bold">Edit Product</h1>
-        <a href="index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base whitespace-nowrap">← Back</a>
+        <a href="/ecommerce-projectphp/admin-site/index.php" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-gray-100 font-medium transition-colors text-sm sm:text-base whitespace-nowrap">← Back</a>
     </header>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
                         <?php if (!empty($product['image'])): ?>
                             <div class="mb-4">
                                 <p class="text-sm text-gray-600 mb-2">Current Image:</p>
-                                <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'], '../')); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="rounded-lg max-w-xs border border-gray-200 w-full sm:w-80">
+                                <img src="<?php echo htmlspecialchars(getProductImageUrl($product['image'])); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="rounded-lg max-w-xs border border-gray-200 w-full sm:w-80">
                             </div>
                         <?php endif; ?>
                         <div class="border-2 border-dashed border-green-300 rounded-lg p-6 text-center bg-green-50 cursor-pointer hover:border-green-500 transition-colors">
@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
                         <button type="submit" class="flex-1 bg-green-500 text-white py-3 sm:py-4 rounded-lg hover:bg-green-600 transition-colors font-semibold text-base sm:text-lg">
                             ✓ Save Changes
                         </button>
-                        <a href="index.php" class="flex-1 bg-gray-200 text-gray-800 py-3 sm:py-4 rounded-lg hover:bg-gray-300 transition-colors font-semibold text-base sm:text-lg text-center">
+                        <a href="/ecommerce-projectphp/admin-site/index.php" class="flex-1 bg-gray-200 text-gray-800 py-3 sm:py-4 rounded-lg hover:bg-gray-300 transition-colors font-semibold text-base sm:text-lg text-center">
                             Cancel
                         </a>
                     </div>

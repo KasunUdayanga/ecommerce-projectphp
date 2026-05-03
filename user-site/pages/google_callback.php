@@ -1,14 +1,14 @@
 <?php
 session_start();
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../shared-core/includes/functions.php';
 
-$config = require_once __DIR__ . '/../includes/config.php';
+$config = require_once __DIR__ . '/../../shared-core/config.php';
 $clientId = $config['google_client_id'] ?? '';
 $clientSecret = $config['google_client_secret'] ?? '';
 $redirectUri = $config['google_redirect_uri'] ?? '';
 
 if (empty($clientId) || empty($clientSecret) || empty($redirectUri)) {
-    die('Google OAuth is not configured. Please set the values in includes/config.php');
+    die('Google OAuth is not configured. Please set the values in shared-core/config.php');
 }
 
 $error = '';

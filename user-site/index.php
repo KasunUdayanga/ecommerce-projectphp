@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once './includes/config.php';
-require_once './includes/functions.php';
+require_once __DIR__ . '/../shared-core/config.php';
+require_once __DIR__ . '/../shared-core/includes/functions.php';
 
 $products = fetchProducts(9);
 $featuredProducts = $products;
@@ -14,7 +14,7 @@ $brandName = 'Green Store';
 $tagline = 'Fresh finds delivered to your door.';
 $homeUrl = 'index.php';
 $cartUrl = 'pages/cart.php';
-$adminUrl = 'admin/login.php';
+$adminUrl = '/ecommerce-projectphp/admin-site/index.php';
 $loginUrl = 'pages/login.php?redirect=' . urlencode($redirectUrl);
 $logoutUrl = 'pages/logout.php';
 $showHero = true;
@@ -33,9 +33,9 @@ $showSamples = false;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenStore</title>
-    <link rel="icon" href="/ecommerce-projectphp/assets/titlelog.png" type="image/png">
+    <link rel="icon" href="/ecommerce-projectphp/shared-core/assets/titlelog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/ecommerce-projectphp/assets/css/styles.css">
+    <link rel="stylesheet" href="/ecommerce-projectphp/shared-core/assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         .reveal-up {
@@ -200,7 +200,7 @@ $showSamples = false;
 </head>
 
 <body class="bg-white text-black">
-    <?php require_once __DIR__ . '/includes/layout/header.php'; ?>
+    <?php require_once __DIR__ . '/../shared-core/includes/layout/header.php'; ?>
     <main class="container mx-auto px-4 py-10">
         <section class="featured-shell reveal-up">
             <div class="flex flex-col gap-2 mb-6 md:flex-row md:items-center md:justify-between">
@@ -347,7 +347,7 @@ $showSamples = false;
             </div>
         </section>
     </main>
-    <?php require_once __DIR__ . '/includes/layout/footer.php'; ?>
+    <?php require_once __DIR__ . '/../shared-core/includes/layout/footer.php'; ?>
 
     <?php if (!$isLoggedIn): ?>
         <div id="login-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
