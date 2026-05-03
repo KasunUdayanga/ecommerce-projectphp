@@ -92,6 +92,7 @@ function ensureDatabaseSchema($conn)
     ensureColumnExists($conn, 'orders', 'payment_status', "payment_status VARCHAR(30) NOT NULL DEFAULT 'pending' AFTER payment_method");
     ensureColumnExists($conn, 'orders', 'order_status', "order_status VARCHAR(30) NOT NULL DEFAULT 'pending' AFTER payment_status");
     ensureColumnExists($conn, 'orders', 'confirmed_at', 'confirmed_at TIMESTAMP NULL DEFAULT NULL AFTER order_status');
+    ensureColumnExists($conn, 'orders', 'delivery_status', "delivery_status VARCHAR(30) NOT NULL DEFAULT 'pending' AFTER confirmed_at");
 
     backfillLegacyOrderTotals($conn);
 }
@@ -845,7 +846,7 @@ function createOrder($userId, $cartItems, $shippingFee = 0.0, $paymentMethod = '
 function getAdminOrders()
 {
     $conn = getDbConnection();
-    $sql = "SELECT o.id, o.user_id, o.total_price, o.shipping_fee, o.grand_total, o.order_status, o.confirmed_at, o.created_at, o.payment_method, o.payment_status, u.username, u.email, u.address, u.phone_number
+    $sql = "SELECT o.id, o.user_id, o.total_price, o.shipping_fee, o.grand_total, o.order_status, o.confirmed_at, o.created_at, o.payment_method, o.payment_status, o.delivery_status, u.username, u.email, u.address, u.phone_number
             FROM orders o
             INNER JOIN users u ON u.id = o.user_id
             ORDER BY o.created_at DESC";
@@ -894,4 +895,85 @@ function confirmAdminOrder($orderId)
     $stmt->close();
     $conn->close();
     return $success;
+}
+
+function getUserOrders($userId)
+{
+    $conn = getDbConnection();
+    $userId = (int) $userId;
+    $sql = "SELECT o.id, o.total_price, o.shipping_fee, o.grand_total, o.order_status, o.payment_method, o.payment_status, o.delivery_status, o.confirmed_at, o.created_at
+            FROM orders o
+            WHERE o.user_id = ?
+            ORDER BY o.created_at DESC";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        $conn->close();
+        return [];
+    }
+
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $orders = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    // Attach order items for each order
+    if (!empty($orders)) {
+        foreach ($orders as &$order) {
+            $orderId = (int) $order['id'];
+            $items = [];
+            try {
+                $itemStmt = $conn->prepare("SELECT oi.quantity, oi.price, p.name as product_name FROM order_items oi LEFT JOIN products p ON p.id = oi.product_id WHERE oi.order_id = ?");
+                if ($itemStmt) {
+                    $itemStmt->bind_param("i", $orderId);
+                    $itemStmt->execute();
+                    $itemRes = $itemStmt->get_result();
+                    if ($itemRes) {
+                        $items = $itemRes->fetch_all(MYSQLI_ASSOC);
+                    }
+                    $itemStmt->close();
+                }
+            } catch (Throwable $e) {
+                // continue
+            }
+            $order['items'] = $items;
+        }
+        unset($order);
+    }
+
+    $conn->close();
+    return $orders;
+}
+
+function updateDeliveryStatus($orderId, $deliveryStatus)
+{
+    $conn = getDbConnection();
+    $orderId = (int) $orderId;
+    $deliveryStatus = trim((string) $deliveryStatus);
+
+    $validStatuses = ['pending', 'processing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'];
+    if (!in_array($deliveryStatus, $validStatuses)) {
+        $deliveryStatus = 'pending';
+    }
+
+    $stmt = $conn->prepare("UPDATE orders SET delivery_status = ? WHERE id = ?");
+    $stmt->bind_param("si", $deliveryStatus, $orderId);
+    $success = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+    return $success;
+}
+
+function getDeliveryStatusBadge($status)
+{
+    $badges = [
+        'pending' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-800', 'label' => 'Pending'],
+        'processing' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800', 'label' => 'Processing'],
+        'shipped' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-800', 'label' => 'Shipped'],
+        'out_for_delivery' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'label' => 'Out for Delivery'],
+        'delivered' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'label' => 'Delivered'],
+        'cancelled' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'label' => 'Cancelled'],
+    ];
+    return $badges[$status] ?? $badges['pending'];
 }

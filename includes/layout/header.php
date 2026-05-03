@@ -6,6 +6,7 @@ $tagline = $tagline ?? 'Fresh finds delivered to your door.';
 $appBase = $appBase ?? '/ecommerce-projectphp/';
 $homeUrl = ($appBase . 'index.php');
 $cartUrl = $cartUrl ?? ($appBase . 'pages/cart.php');
+$myOrdersUrl = $myOrdersUrl ?? ($appBase . 'pages/my-orders.php');
 $adminUrl = $adminUrl ?? ($appBase . 'admin/login.php');
 $loginUrl = $loginUrl ?? ($appBase . 'pages/login.php');
 $logoutUrl = $logoutUrl ?? ($appBase . 'pages/logout.php');
@@ -59,6 +60,7 @@ function isActive($navUrl, $currentPath): string
             <?php
             $homeActive = isActive($homeUrl, $currentPath);
             $cartActive = isActive($cartUrl, $currentPath);
+            $myOrdersActive = isActive($myOrdersUrl, $currentPath);
             $adminActive = isActive($adminUrl, $currentPath);
             $loginActive = isActive($loginUrl, $currentPath);
             $registerActive = isActive($registerUrl, $currentPath);
@@ -67,6 +69,7 @@ function isActive($navUrl, $currentPath): string
             <a href="<?php echo htmlspecialchars($cartUrl); ?>" class="text-white <?php echo $cartActive === 'text-green-200' ? 'text-green-200 pointer-events-none opacity-80' : 'hover:text-gray-200'; ?>" <?php echo $cartActive === 'text-green-200' ? 'aria-current="page" aria-disabled="true"' : ''; ?>>Cart</a>
             <a href="<?php echo htmlspecialchars($adminUrl); ?>" class="text-white <?php echo $adminActive === 'text-green-200' ? 'text-green-200 pointer-events-none opacity-80' : 'hover:text-gray-200'; ?>" <?php echo $adminActive === 'text-green-200' ? 'aria-current="page" aria-disabled="true"' : ''; ?>>Admin</a>
             <?php if (!empty($isLoggedIn)): ?>
+                <a href="<?php echo htmlspecialchars($myOrdersUrl); ?>" class="text-white <?php echo $myOrdersActive === 'text-green-200' ? 'text-green-200 pointer-events-none opacity-80' : 'hover:text-gray-200'; ?>" <?php echo $myOrdersActive === 'text-green-200' ? 'aria-current="page" aria-disabled="true"' : ''; ?>>My Orders</a>
                 <span class="text-white">Hi, <?php echo htmlspecialchars($userName ?? ''); ?></span>
                 <a href="<?php echo htmlspecialchars($logoutUrl); ?>" class="text-white hover:text-gray-200">Logout</a>
             <?php else: ?>
