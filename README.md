@@ -1,4 +1,4 @@
-# eCommerce Project
+# Green Store Project
 
 This is a simple eCommerce web application built using PHP, SQL, HTML, and Tailwind CSS. The project is designed to provide a basic online shopping experience.
 
@@ -28,19 +28,57 @@ This is a simple eCommerce web application built using PHP, SQL, HTML, and Tailw
 - Open `/admin/login.php` to manage products.
 - Log in as a customer to add items to the cart or checkout.
 
-## Admin Login
+## Configuration (`shared-core/config.php`)
 
-Use the default credentials (update them in `includes/config.php` after first login):
+- Purpose: centralizes database credentials, OAuth settings, and payment/bank details used by both the user and admin sites.
+- Security: do NOT commit live credentials. The file `shared-core/config.php` is already included in `.gitignore`.
 
-- Username: `admin`
-- Password: `admin123`
+Below is a safe example you can copy into `shared-core/config.php` and then fill in with your real values. Keep the real file out of source control.
 
-## Customer Login
+```php
+<?php
+// shared-core/config.php (example — DO NOT COMMIT real secrets)
 
-Use the default customer account created automatically:
+$db_host = 'DB_HOST_HERE';
+$db_user = 'DB_USER_HERE';
+$db_pass = 'DB_PASS_HERE';
+$db_name = 'DB_NAME_HERE';
 
-- Email: `customer@example.com`
-- Password: `customer123`
+$db_config = [
+	'db_host' => $db_host,
+	'db_user' => $db_user,
+	'db_pass' => $db_pass,
+	'db_name' => $db_name,
+
+	// Admin credentials (change after first login)
+	'admin_username' => 'admin',
+	'admin_password' => 'admin123',
+	'admin_password_hash' => null,
+
+	// Google OAuth (set to your domain's callback)
+	'google_client_id' => 'GOOGLE_CLIENT_ID',
+	'google_client_secret' => 'GOOGLE_CLIENT_SECRET',
+	'google_redirect_uri' => 'https://yourdomain.example.com/user-site/pages/google_callback.php',
+
+	// Bank / payment placeholders
+	'bank_name' => 'Your Bank',
+	'bank_account_name' => 'Account Name',
+	'bank_account_number' => '0000000000',
+	'bank_branch' => 'Branch Name',
+
+	'payhere_merchant_id' => 'PAYHERE_MERCHANT_ID',
+	'payhere_merchant_secret' => 'PAYHERE_MERCHANT_SECRET',
+];
+
+return $db_config;
+```
+
+Follow-up notes:
+
+- Replace placeholders with your actual database and OAuth credentials before deploying.
+- Update the `google_redirect_uri` in Google Cloud Console to match your live domain callback.
+- On InfinityFree, use the database credentials provided in the control panel and set `google_redirect_uri` to your InfinityFree domain.
+- Make sure `shared-core/uploads/` exists and is writable for product images and receipts.
 
 ## Technologies Used
 
