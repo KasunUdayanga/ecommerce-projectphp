@@ -12,7 +12,6 @@ Simple eCommerce web app using PHP, MySQL and Tailwind CSS.
 - Admin dashboard: add/edit/delete products + image uploads
 - Responsive UI (mobile-first, Tailwind CSS)
 
-
 ## Setup Instructions
 
 1. Clone the repository to your local machine.
@@ -89,10 +88,6 @@ Follow-up notes:
 
 ## Live Demo
 
-- **Store (user site):** https://greenstrore.ct.ws/user-site/
-- **Admin (login):** https://greenstrore.ct.ws/admin-site/admin/login.php
+[🛒 Visit Store](https://greenstrore.ct.ws/user-site/) &nbsp; [🔐 Admin Login](https://greenstrore.ct.ws/admin-site/admin/login.php)
 
-Notes:
 
-- If you deployed using the included `shared-core/config.php` example, update the real config with production DB credentials and change default admin credentials immediately.
-- Ensure Google OAuth `google_redirect_uri` and any payment callback URLs match the `greenstrore.ct.ws` domain.
