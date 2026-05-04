@@ -1,16 +1,17 @@
 # Green Store Project
 
-This is a simple eCommerce web application built using PHP, SQL, HTML, and Tailwind CSS. The project is designed to provide a basic online shopping experience.
+![Green Store Logo](shared-core/assets/titlelog.png)
 
-## Features
+Simple eCommerce web app using PHP, MySQL and Tailwind CSS.
 
-- User-friendly homepage displaying featured products.
-- Product detail pages with descriptions and pricing.
-- Shopping cart functionality to manage selected items.
-- Checkout page with order summary and shipping form.
-- Admin dashboard to add, edit, and delete products.
-- Admin product image uploads with automatic 4:3 cropping.
-- Responsive design using Tailwind CSS.
+## Key Features
+
+- Featured products and curated storefront
+- Product detail pages with full descriptions and images
+- Shopping cart and checkout with order confirmation
+- Admin dashboard: add/edit/delete products + image uploads
+- Responsive UI (mobile-first, Tailwind CSS)
+
 
 ## Setup Instructions
 
@@ -37,7 +38,7 @@ Below is a safe example you can copy into `shared-core/config.php` and then fill
 
 ```php
 <?php
-// shared-core/config.php (example — DO NOT COMMIT real secrets)
+
 
 $db_host = 'DB_HOST_HERE';
 $db_user = 'DB_USER_HERE';
@@ -50,17 +51,17 @@ $db_config = [
 	'db_pass' => $db_pass,
 	'db_name' => $db_name,
 
-	// Admin credentials (change after first login)
+
 	'admin_username' => 'admin',
 	'admin_password' => 'admin123',
 	'admin_password_hash' => null,
 
-	// Google OAuth (set to your domain's callback)
+
 	'google_client_id' => 'GOOGLE_CLIENT_ID',
 	'google_client_secret' => 'GOOGLE_CLIENT_SECRET',
 	'google_redirect_uri' => 'https://yourdomain.example.com/user-site/pages/google_callback.php',
 
-	// Bank / payment placeholders
+
 	'bank_name' => 'Your Bank',
 	'bank_account_name' => 'Account Name',
 	'bank_account_number' => '0000000000',
@@ -86,6 +87,12 @@ Follow-up notes:
 - MySQL for database management.
 - HTML and Tailwind CSS for front-end design.
 
-## License
+## Live Demo
 
-This project is open-source and available for modification and distribution.
+- **Store (user site):** https://greenstrore.ct.ws/user-site/
+- **Admin (login):** https://greenstrore.ct.ws/admin-site/admin/login.php
+
+Notes:
+
+- If you deployed using the included `shared-core/config.php` example, update the real config with production DB credentials and change default admin credentials immediately.
+- Ensure Google OAuth `google_redirect_uri` and any payment callback URLs match the `greenstrore.ct.ws` domain.
