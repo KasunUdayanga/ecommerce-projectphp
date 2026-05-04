@@ -91,22 +91,24 @@ if ($searchQuery !== '') {
     </header>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <div class="flex flex-col gap-4 mb-8 md:flex-row md:items-center md:justify-between">
-            <div>
+        <div class="flex flex-col gap-4 mb-8 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between lg:p-5">
+            <div class="min-w-0">
                 <span class="soft-badge">Inventory</span>
                 <h2 class="mt-2 text-3xl sm:text-4xl font-bold">Products Management</h2>
             </div>
-            <div class="flex items-center gap-3">
-                <form method="GET" action="index.php" class="flex items-center gap-2">
-                    <input type="text" name="q" value="<?php echo htmlspecialchars($searchQuery ?? ''); ?>" placeholder="Search products by name or id" class="rounded-lg border border-gray-300 px-4 py-3 text-sm text-sm focus:border-green-500 focus:outline-none">
-                    <button type="submit" class="justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">Search</button>
+            <div class="flex w-full flex-col gap-3 md:w-auto md:min-w-[28rem] md:items-end">
+                <form method="GET" action="index.php" class="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+                    <input type="text" name="q" value="<?php echo htmlspecialchars($searchQuery ?? ''); ?>" placeholder="Search products by name or id" class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:border-green-500 focus:outline-none sm:flex-1">
+                    <button type="submit" class="w-full justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap sm:w-auto">Search</button>
                 </form>
-                <?php if (!empty($searchQuery)): ?>
-                    <a href="index.php" class="text-sm text-gray-600 hover:underline">Clear</a>
-                <?php endif; ?>
-                <a href="/ecommerce-projectphp/admin-site/admin/orders.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap">
-                    Open Order Confirmations
-                </a>
+                <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+                    <?php if (!empty($searchQuery)): ?>
+                        <a href="index.php" class="text-sm text-gray-600 hover:underline">Clear</a>
+                    <?php endif; ?>
+                    <a href="admin/orders.php" class="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap text-center">
+                        Open Order Confirmations
+                    </a>
+                </div>
             </div>
         </div>
 
