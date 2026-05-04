@@ -62,7 +62,7 @@ $stock = isset($product['stock']) ? (int) $product['stock'] : 0;
             </div>
             <div>
                 <h1 class="text-3xl font-bold mb-2"><?php echo htmlspecialchars($product['name']); ?></h1>
-                <p class="text-gray-600 mb-2"><?php echo htmlspecialchars($descriptionPreview); ?></p>
+                <p class="text-gray-600 mb-2"><?php echo nl2br(htmlspecialchars($descriptionText)); ?></p>
                 <p class="text-2xl font-semibold text-green-600 mb-2">LKR<?php echo number_format($product['price'], 2); ?></p>
                 <p class="text-sm text-gray-700 mb-6"><?php echo $stock > 0 ? $stock . ' in stock' : 'Out of stock'; ?></p>
                 <form action="cart.php" method="post" class="flex flex-wrap gap-3">
